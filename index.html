@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEVIATHAM /// CLASSIFIED</title>
+    <style>
+        /* --- FUENTES & RESET --- */
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        
+        body {
+            background-color: #000;
+            color: #0f0;
+            font-family: 'Share Tech Mono', monospace;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+
+        /* --- EFECTO CRT & FONDO --- */
+        #neural-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        .crt-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .scanline {
+            width: 100%;
+            height: 100px;
+            z-index: 10;
+            background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0, 255, 0, 0.1) 50%, rgba(0,0,0,0) 100%);
+            opacity: 0.1;
+            position: absolute;
+            bottom: 100%;
+            animation: scanline 10s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scanline {
+            0% { bottom: 100%; }
+            100% { bottom: -100px; }
+        }
+
+        /* --- UI PRINCIPAL --- */
+        .container {
+            position: relative;
+            z-index: 5;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+            margin-bottom: 20px;
+            letter-spacing: 5px;
+            animation: glitch 1s linear infinite;
+        }
+
+        .btn {
+            background: rgba(0, 20, 0, 0.8);
+            border: 1px solid #0f0;
+            color: #0f0;
+            padding: 15px 30px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            margin: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            box-shadow: 0 0 5px #0f0;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .btn:hover {
+            background: #0f0;
+            color: #000;
+            box-shadow: 0 0 20px #0f0;
+        }
+
+        .input-field {
+            background: transparent;
+            border: 1px solid #0f0;
+            border-left: 5px solid #0f0;
+            color: #0f0;
+            padding: 15px;
+            width: 100%;
+            max-width: 400px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            outline: none;
+        }
+
+        .hidden { display: none !important; }
+
+        /* --- SECCIONES --- */
+        .panel-box {
+            background: rgba(0, 10, 0, 0.9);
+            border: 1px solid #0f0;
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+        }
+
+        .protocol-info {
+            font-size: 0.9rem;
+            text-align: left;
+            margin-bottom: 20px;
+            border-bottom: 1px dashed #0f0;
+            padding-bottom: 10px;
+            opacity: 0.8;
+        }
+
+        .protocol-item { margin-bottom: 8px; }
+        .protocol-item span { font-weight: bold; color: #fff; }
+
+        /* --- TERMINAL --- */
+        #terminal-view {
+            width: 90%;
+            height: 80%;
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid #0f0;
+            padding: 10px;
+            overflow: hidden;
+            font-size: 0.9rem;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #terminal-output {
+            flex-grow: 1;
+            overflow-y: hidden; /* Auto scroll handled by JS */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .log-line {
+            margin: 2px 0;
+            word-break: break-all;
+        }
+        .success { color: #0f0; font-weight: bold; }
+        .fail { color: #555; }
+        .sys { color: #0ff; }
+        .warn { color: orange; }
+        .ai { color: #f0f; text-shadow: 0 0 5px #f0f; }
+
+        #stats-bar {
+            border-top: 1px solid #0f0;
+            padding-top: 5px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+        }
+
+        /* --- ANIMACIONES --- */
+        @keyframes glitch {
+            2%, 64% { transform: translate(2px,0) skew(0deg); }
+            4%, 60% { transform: translate(-2px,0) skew(0deg); }
+            62% { transform: translate(0,0) skew(5deg); } 
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            .btn { font-size: 1rem; padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="neural-canvas"></canvas>
+    <div class="crt-overlay"></div>
+    <div class="scanline"></div>
+
+    <div class="container">
+        
+        <div id="screen-intro">
+            <h1>LEVIATHAM<br>BRUTEFORCE</h1>
+            <p style="margin-bottom: 30px; opacity: 0.8;">[ SYSTEM STATUS: ONLINE ]</p>
+            <button class="btn" onclick="goToTarget()">INITIALIZE SYSTEM</button>
+        </div>
+
+        <div id="screen-target" class="hidden">
+            <h2>SELECT VECTOR</h2>
+            <div class="panel-box">
+                <select id="vector-select" class="input-field" style="background: black;">
+                    <option value="GMAIL_SMTP">GMAIL / GOOGLE ACC</option>
+                    <option value="WPA2_HANDSHAKE">WIFI (WPA2/WPA3)</option>
+                    <option value="AES_256">AES-256 DECRYPTION</option>
+                    <option value="SSH_FTP">SERVER (SSH/FTP)</option>
+                </select>
+                <input type="text" id="target-input" class="input-field" placeholder="ENTER TARGET ID / IP / EMAIL">
+                <button class="btn" onclick="goToAttack()">PROCEED TO METHOD</button>
+            </div>
+        </div>
+
+        <div id="screen-method" class="hidden">
+            <h2>ATTACK PROTOCOL</h2>
+            <div class="panel-box">
+                <div class="protocol-info">
+                    <div class="protocol-item"><span>[1] SIMPLE:</span> Rapid standard pw list check. Low CPU.</div>
+                    <div class="protocol-item"><span>[2] DICTIONARY:</span> Uses SecLists & RockYou database.</div>
+                    <div class="protocol-item"><span>[3] HYBRID:</span> Dictionary + Rule manipulation (Leet/Case).</div>
+                    <div class="protocol-item"><span>[4] LEVIATHAM AI:</span> Neural prediction pattern. Adaptive.</div>
+                </div>
+
+                <button class="btn" onclick="startBruteforce('SIMPLE')">SIMPLE ATTACK</button>
+                <button class="btn" onclick="startBruteforce('DICTIONARY')">DICTIONARY ATTACK</button>
+                <button class="btn" onclick="startBruteforce('HYBRID')">HYBRID ATTACK</button>
+                <button class="btn" onclick="startBruteforce('AI')" style="border-color: #f0f; color: #f0f;">LEVIATHAM AI CORE</button>
+            </div>
+        </div>
+
+        <div id="terminal-view" class="hidden">
+            <div id="terminal-output"></div>
+            <div id="stats-bar">
+                <span id="stat-method">METHOD: NULL</span>
+                <span id="stat-attempts">ATTEMPTS: 0</span>
+                <span id="stat-target">TGT: NULL</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- CONFIGURACIÓN DE RED NEURONAL (FONDO) ---
+        const canvas = document.getElementById('neural-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+        for(let i=0; i<60; i++){
+            particles.push({
+                x: Math.random()*canvas.width,
+                y: Math.random()*canvas.height,
+                vx: (Math.random()-0.5)*2,
+                vy: (Math.random()-0.5)*2
+            });
+        }
+
+        function drawNet() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0f0';
+            ctx.strokeStyle = '#0f0';
+            
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 2, 0, Math.PI*2);
+                ctx.fill();
+
+                particles.forEach(p2 => {
+                    let d = Math.hypot(p.x - p2.x, p.y - p2.y);
+                    if(d < 150) {
+                        ctx.beginPath();
+                        ctx.globalAlpha = 1 - d/150;
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                        ctx.globalAlpha = 1;
+                    }
+                });
+            });
+            requestAnimationFrame(drawNet);
+        }
+        drawNet();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // --- LÓGICA DE INTERFAZ ---
+        let currentTarget = "";
+        let currentMethod = "";
+        let attemptCount = 0;
+        let isRunning = false;
+
+        function goToTarget() {
+            document.getElementById('screen-intro').classList.add('hidden');
+            document.getElementById('screen-target').classList.remove('hidden');
+        }
+
+        function goToAttack() {
+            currentTarget = document.getElementById('target-input').value;
+            if(!currentTarget) currentTarget = "UNKNOWN_TARGET_01";
+            
+            document.getElementById('screen-target').classList.add('hidden');
+            document.getElementById('screen-method').classList.remove('hidden');
+        }
+
+        function startBruteforce(method) {
+            currentMethod = method;
+            document.getElementById('screen-method').classList.add('hidden');
+            document.getElementById('terminal-view').classList.remove('hidden');
+            
+            // Setup stats
+            document.getElementById('stat-method').innerText = "MTHD: " + method;
+            document.getElementById('stat-target').innerText = "TGT: " + currentTarget.substring(0, 15);
+            
+            initTerminal();
+        }
+
+        // --- LÓGICA DE TERMINAL & FAKE BRUTEFORCE ---
+        const output = document.getElementById('terminal-output');
+        const statAttempts = document.getElementById('stat-attempts');
+
+        // Datos falsos para el ataque
+        const commonPass = ["123456", "password", "admin", "iloveyou", "princess", "rockyou", "dragon", "baseball", "monkey", "letmein"];
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+        
+        function log(msg, type="norm") {
+            const div = document.createElement('div');
+            div.className = "log-line " + type;
+            // Timestamp
+            const time = new Date().toISOString().split('T')[1].slice(0, -1);
+            div.innerText = `[${time}] ${msg}`;
+            output.appendChild(div);
+            // Auto scroll
+            output.scrollTop = output.scrollHeight;
+            
+            // Mantener el DOM ligero
+            if(output.childElementCount > 50) {
+                output.removeChild(output.firstChild);
+            }
+        }
+
+        function generateFakeHash() {
+            return Array(32).fill(0).map(() => chars[Math.floor(Math.random() * chars.length)]).join('');
+        }
+
+        function initTerminal() {
+            log(`INITIALIZING LEVIATHAM CORE V4.0...`, "sys");
+            setTimeout(() => log(`TARGET ACQUIRED: ${currentTarget}`, "warn"), 500);
+            setTimeout(() => log(`LOADING DICTIONARIES FOR ${currentMethod}...`, "sys"), 1000);
+            setTimeout(() => {
+                log(`HANDSHAKE ESTABLISHED. STARTING BRUTEFORCE.`, "success");
+                isRunning = true;
+                runAttackLoop();
+            }, 2000);
+        }
+
+        function runAttackLoop() {
+            if(!isRunning) return;
+
+            // Velocidad variable según el método
+            let speed = 30; 
+            if(currentMethod === 'AI') speed = 10; // AI es más rápida
+
+            setInterval(() => {
+                attemptCount += Math.floor(Math.random() * 15) + 1;
+                statAttempts.innerText = `ATTEMPTS: ${attemptCount}`;
+                
+                // Generar líneas de log aleatorias
+                let r = Math.random();
+                let fakePw = "";
+                
+                if (currentMethod === 'AI' && r > 0.8) {
+                    log(`[AI-PREDICT] Pattern Analysis: ${generateFakeHash().substring(0,10)}...`, "ai");
+                } else if (r > 0.6) {
+                    fakePw = commonPass[Math.floor(Math.random() * commonPass.length)] + Math.floor(Math.random()*999);
+                    log(`TRYING: ${fakePw} ... [FAILED]`, "fail");
+                } else {
+                    fakePw = generateFakeHash().substring(0, 12);
+                    log(`TRYING HASH: ${fakePw} ... [ACCESS DENIED]`, "fail");
+                }
+
+                // Evento raro (simular éxito casi logrado)
+                if(r < 0.01) {
+                    log(`WARNING: PARTIAL HANDSHAKE DETECTED... RETRYING`, "warn");
+                }
+
+            }, speed);
+        }
+    </script>
+</body>
+</html>
