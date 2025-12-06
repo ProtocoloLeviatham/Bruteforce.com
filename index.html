@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LEVIATHAM | BRUTE FORCE UNIT</title>
+    <title>Brute Force</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Fonts -->
@@ -227,9 +228,9 @@
         <header class="text-center border-b-4 border-green-900 pb-6 mb-2 bg-black/50 pt-6">
             <h1 class="glitch tracking-widest text-white">LEVIATHAN BRUTE FORCE</h1>
             <div class="flex justify-center gap-8 mt-2 text-xs font-bold tracking-widest font-mono">
-                <span class="text-green-600">UNIT: <span class="text-white">CIA_BLACK_OPS</span></span>
+                <span class="text-green-600">UNIT: <span class="text-white">S4G</span></span>
                 <span class="text-green-600">STATUS: <span class="text-primary animate-pulse">ACTIVE</span></span>
-                <span class="text-green-600">KERNEL: <span class="text-gray-400">v15.2.0-LVT</span></span>
+                <span class="text-green-600">KERNEL: <span class="text-gray-400">v1.0.0</span></span>
             </div>
         </header>
 
@@ -485,20 +486,466 @@
         </div>
     </footer>
 
-    <script>
-        // ==========================================
-        // === DATABASE DE CONTRASEÑAS (EDITABLE) ===
-        // ==========================================
-        // Añade tus contraseñas aquí entre comillas y separadas por coma.
-        const passwordDB = [
-            "123456", "password", "12345678", "qwerty", "12345", "123456789", "123123", "111111", "1234567", 
-            "sunshine", "dragon", "welcome", "football", "monkey", "letmeinh", "iloveyou", "master", "michael", 
-            "charlie", "666666", "princess", "shadow", "mustang", "superman", "daniel", "joshua", "secret", 
-            "michelle", "killer", "login", "password123", "hunter2", "admin", "root", "toor", "kali", "cisco", 
-            "guest", "operator", "super", "support", "service", "network", "server", "cisco123", "manager", 
-            "system", "password1234", "changeme", "admin123", "qwertyuiop", "asdfghjkl", "zxcvbnm", "00000000",
-            "1234567890", "654321", "pass123", "admin!@#", "bruteforce", "hacking", "leviathan", "godmode",
-            "access", "router", "wifi123", "internet", "google", "facebook", "instagram", "twitter", "love"
+   <script>
+    // ==========================================
+    // === DATABASE DE CONTRASEÑAS (+1000)    ===
+    // ==========================================
+    const passwordDB = [
+        // --- Top Comunes ---
+        "123456", "password", "12345678", "qwerty", "123456789", "12345", "1234", "111111", "1234567", "dragon",
+        "sunshine", "welcome", "football", "iloveyou", "master", "monkey", "letmeinh", "charlie", "michael",
+        "superman", "princess", "mustang", "shadow", "666666", "baseball", "joshua", "secret", "killer", "daniel",
+        "jessica", "michelle", "login", "hunter2", "ashley", "matthew", "andrew", "access", "liverpool", "arsenal",
+        "manchester", "chelsea", "football1", "matrix", "pokemon", "starwars", "startrek", "batman", "harley",
+        "joker", "justin", "scotland", "ireland", "williams", "amanda", "thomas", "robert", "nicole", "jennifer",
+        "stephanie", "melissa", "anthony", "elizabeth", "brandon", "jordan", "rebecca", "brittany", "samuel",
+        "christopher", "alexander", "samantha", "joseph", "benjamin", "katherine", "jonathan", "christian",
+        "kimberly", "patricia", "stephen", "patrick", "richard", "tiffany", "charles", "shannon", "chelsea",
+        "danielle", "george", "courtney", "heather", "amber", "laura", "sarah", "jamie", "mary", "megan",
+        "rachel", "amanda", "kelly", "sandra", "crystal", "andrea", "amy", "victoria", "maria", "ryan",
+        
+        // --- Patrones y Teclado ---
+        "qwertyuiop", "asdfghjkl", "zxcvbnm", "1q2w3e4r", "1a2s3d4f", "000000", "121212", "123123", "654321",
+        "0987654321", "102030", "admin", "admin123", "admin1", "root", "toor", "user", "test", "demo", "guest",
+        "pass", "pass1", "pass123", "temp", "temp123", "cisco", "sanfer", "barca", "realmadrid", "madrid",
+        "barcelona", "valencia", "sevilla", "betis", "atletico", "espana", "spain", "argentina", "mexico",
+        "colombia", "chile", "peru", "brasil", "brazil", "portugal", "france", "italy", "germany", "usa",
+        "america", "newyork", "london", "paris", "tokyo", "china", "japan", "russia", "moscow", "berlin",
+
+        // --- Nombres y Palabras Comunes (Español/Inglés) ---
+        "hola", "mundo", "casa", "perro", "gato", "familia", "amor", "teamo", "vida", "sol", "luna", "cielo",
+        "mar", "playa", "verano", "invierno", "otono", "primavera", "rojo", "azul", "verde", "blanco", "negro",
+        "amarillo", "rosa", "naranja", "violeta", "gris", "cafe", "cerveza", "fiesta", "musica", "baile",
+        "futbol", "baloncesto", "tenis", "natacion", "correr", "gym", "fitness", "dinero", "trabajo", "escuela",
+        "colegio", "universidad", "maestro", "profesor", "alumno", "estudiante", "libro", "leer", "escribir",
+        "computadora", "ordenador", "internet", "wifi", "google", "facebook", "twitter", "instagram", "tiktok",
+        "youtube", "whatsapp", "email", "correo", "juego", "gamer", "gaming", "nintendo", "xbox", "playstation",
+        "sony", "samsung", "iphone", "apple", "android", "huawei", "xiaomi", "nokia", "motorola", "lg",
+        
+        // --- Secuencias Numéricas y Fechas (1980-2023) ---
+        "1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989",
+        "1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999",
+        "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009",
+        "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019",
+        "2020", "2021", "2022", "2023", "2024", "2025", "1234567890", "0987654321",
+        
+        // --- Variaciones de Admin y Sistemas ---
+        "administrator", "manager", "support", "sysadmin", "system", "oracle", "database", "server", "backup",
+        "firewall", "router", "switch", "gateway", "network", "printer", "scanner", "webmaster", "website",
+        "domain", "hosting", "cloud", "azure", "aws", "docker", "kubernetes", "linux", "windows", "macos",
+        "ubuntu", "debian", "centos", "redhat", "fedora", "gentoo", "arch", "mint", "kali", "parrot",
+        "security", "hacker", "hacking", "exploit", "payload", "malware", "virus", "trojan", "worm", "botnet",
+        "ddos", "phishing", "spam", "scam", "fraud", "card", "bank", "paypal", "visa", "mastercard",
+        
+        // --- Cultura Pop y Películas ---
+        "gandalf", "frodo", "bilbo", "aragorn", "legolas", "gimli", "sauron", "mordor", "shire", "hobbit",
+        "potter", "harry", "hermione", "ron", "dumbledore", "voldemort", "snape", "hogwarts", "gryffindor",
+        "slytherin", "hufflepuff", "ravenclaw", "luke", "leia", "han", "chewie", "vader", "yoda", "obiwan",
+        "anakin", "padme", "r2d2", "c3po", "deathstar", "millennium", "falcon", "xwing", "tie", "fighter",
+        "stark", "rogers", "banner", "thor", "loki", "thanos", "avengers", "marvel", "dc", "wayne",
+        "kent", "diana", "flash", "aquaman", "cyborg", "joker", "harley", "penguin", "riddler", "bane",
+        
+        // --- Animales y Naturaleza ---
+        "eagle", "hawk", "falcon", "owl", "parrot", "penguin", "duck", "swan", "goose", "chicken",
+        "lion", "tiger", "leopard", "cheetah", "panther", "jaguar", "cougar", "lynx", "bobcat", "cat",
+        "wolf", "fox", "dog", "bear", "polar", "panda", "koala", "kangaroo", "wallaby", "wombat",
+        "elephant", "rhino", "hippo", "giraffe", "zebra", "horse", "donkey", "mule", "camel", "llama",
+        "cow", "bull", "ox", "buffalo", "bison", "sheep", "goat", "pig", "hog", "boar",
+        "deer", "elk", "moose", "caribou", "antelope", "gazelle", "impala", "wildebeest", "gnu", "okapi",
+        "whale", "dolphin", "porpoise", "orca", "shark", "seal", "walrus", "manatee", "dugong", "otter",
+        
+        // --- Comida y Bebida ---
+        "pizza", "burger", "fries", "hotdog", "sandwich", "taco", "burrito", "nachos", "sushi", "ramen",
+        "pasta", "spaghetti", "lasagna", "ravioli", "risotto", "steak", "chicken", "pork", "beef", "lamb",
+        "fish", "shrimp", "crab", "lobster", "oyster", "clam", "mussel", "scallop", "squid", "octopus",
+        "apple", "banana", "orange", "grape", "lemon", "lime", "berry", "melon", "peach", "pear",
+        "water", "milk", "juice", "soda", "coke", "pepsi", "sprite", "fanta", "beer", "wine",
+        
+        // --- Nombres Femeninos Comunes ---
+        "maria", "ana", "carmen", "dolores", "isabel", "josefa", "pilar", "teresa", "rosa", "cristina",
+        "angeles", "laura", "elena", "mercedes", "luisa", "rosario", "consuelo", "raquel", "beatriz", "patricia",
+        "julia", "adriana", "silvia", "veronica", "natalia", "monica", "alicia", "ester", "yolanda", "irene",
+        "sara", "eva", "belen", "rocio", "virginia", "gloria", "amparo", "noelia", "marina", "lorena",
+        
+        // --- Nombres Masculinos Comunes ---
+        "antonio", "jose", "manuel", "francisco", "juan", "david", "pedro", "javier", "jesus", "carlos",
+        "miguel", "rafael", "fernando", "angel", "pablo", "luis", "sergio", "jorge", "alberto", "diego",
+        "alvaro", "adrian", "raul", "enrique", "ramon", "vicente", "ivan", "ruben", "oscar", "andres",
+        "joaquin", "santiago", "eduardo", "victor", "roberto", "jaime", "francisco", "ignacio", "alfonso", "salvador",
+        
+        // --- Relleno de Variaciones (admin + num, pass + num) ---
+        "admin0", "admin1", "admin2", "admin3", "admin4", "admin5", "admin6", "admin7", "admin8", "admin9",
+        "pass0", "pass1", "pass2", "pass3", "pass4", "pass5", "pass6", "pass7", "pass8", "pass9",
+        "user0", "user1", "user2", "user3", "user4", "user5", "user6", "user7", "user8", "user9",
+        "test0", "test1", "test2", "test3", "test4", "test5", "test6", "test7", "test8", "test9",
+        "demo0", "demo1", "demo2", "demo3", "demo4", "demo5", "demo6", "demo7", "demo8", "demo9",
+        "1111", "2222", "3333", "4444", "5555", "6666", "7777", "8888", "9999", "0000",
+        "1234", "2345", "3456", "4567", "5678", "6789", "7890", "0987", "9876", "8765",
+        "abcd", "bcde", "cdef", "defg", "efgh", "fghi", "ghij", "hijk", "ijkl", "jklm",
+        "klmn", "lmno", "mnop", "nopq", "opqr", "pqrs", "qrst", "rstu", "stuv", "tuvw",
+        
+        // --- Deportes y Equipos (Extendido) ---
+        "lakers", "bulls", "warriors", "celtics", "knicks", "heat", "spurs", "rockets", "pistons", "magic",
+        "yankees", "redsox", "dodgers", "cubs", "giants", "mets", "cardinals", "braves", "tigers", "royals",
+        "cowboys", "patriots", "steelers", "packers", "eagles", "raiders", "bears", "broncos", "vikings", "saints",
+        "leafs", "habs", "bruins", "rangers", "wings", "hawks", "pens", "kings", "sharks", "ducks",
+        "messi", "ronaldo", "neymar", "mbappe", "haland", "pele", "maradona", "zidane", "beckham", "kaka",
+        "lebron", "kobe", "jordan", "shaq", "curry", "durant", "harden", "giannis", "luka", "kawhi",
+        "federer", "nadal", "djokovic", "murray", "serena", "venus", "sharapova", "halep", "osaka", "barty",
+        "tiger", "woods", "mickelson", "mcilroy", "dustin", "spieth", "thomas", "koepka", "rahm", "fowler",
+        
+        // --- Coches y Marcas ---
+        "toyota", "honda", "ford", "chevy", "nissan", "bmw", "mercedes", "audi", "vw", "volvo",
+        "lexus", "mazda", "subaru", "kia", "hyundai", "tesla", "ferrari", "porsche", "lambo", "bugatti",
+        "mustang", "camaro", "corvette", "charger", "challenger", "viper", "f150", "silverado", "ram", "tundra",
+        "civic", "accord", "camry", "corolla", "altima", "sentra", "focus", "fiesta", "cruze", "malibu",
+        "golf", "jetta", "passat", "beetle", "tiguan", "atlas", "q5", "q7", "a4", "a6",
+        "3series", "5series", "7series", "x3", "x5", "cclass", "eclass", "sclass", "gle", "glc",
+        
+        // --- Colores y Arte ---
+        "red", "blue", "green", "yellow", "orange", "purple", "pink", "black", "white", "gray",
+        "brown", "cyan", "magenta", "violet", "indigo", "teal", "lime", "olive", "maroon", "navy",
+        "gold", "silver", "bronze", "copper", "platinum", "titanium", "diamond", "ruby", "sapphire", "emerald",
+        "paint", "brush", "canvas", "sketch", "draw", "color", "shade", "tint", "hue", "tone",
+        "music", "song", "dance", "art", "pic", "photo", "image", "video", "film", "movie",
+        
+        // --- Palabras Aleatorias Comunes ---
+        "happy", "sad", "angry", "funny", "cool", "hot", "cold", "good", "bad", "nice",
+        "kind", "mean", "smart", "dumb", "rich", "poor", "fast", "slow", "hard", "soft",
+        "loud", "quiet", "high", "low", "big", "small", "fat", "thin", "long", "short",
+        "old", "new", "young", "fresh", "clean", "dirty", "wet", "dry", "light", "dark",
+        "day", "night", "sun", "moon", "star", "sky", "cloud", "rain", "snow", "wind",
+        "fire", "water", "earth", "air", "metal", "wood", "stone", "rock", "sand", "dust",
+        "tree", "flower", "grass", "leaf", "root", "stem", "seed", "fruit", "nut", "berry",
+        "dog", "cat", "bird", "fish", "bug", "ant", "bee", "fly", "worm", "snake",
+        "man", "woman", "boy", "girl", "kid", "child", "baby", "teen", "adult", "elder",
+        "king", "queen", "prince", "princess", "lord", "lady", "duke", "baron", "knight", "squire",
+        
+        // --- Más Variaciones Numéricas (Relleno final) ---
+        "0001", "0002", "0003", "0004", "0005", "0006", "0007", "0008", "0009", "0010",
+        "1010", "2020", "3030", "4040", "5050", "6060", "7070", "8080", "9090", "0101",
+        "1122", "2233", "3344", "4455", "5566", "6677", "7788", "8899", "9900", "0011",
+        "1212", "1313", "1414", "1515", "1616", "1717", "1818", "1919", "2020", "2121",
+        "1112", "2223", "3334", "4445", "5556", "6667", "7778", "8889", "9990", "0001"
+
+        "123456", "password", "12345678", "qwerty", "12345", "123456789", "123123", "111111", 
+        "sunshine", "iloveyou", "princess", "admin", "welcome", "football", "charlie", 
+        "american", "baseball", "dragon", "monkeys", "joshua", "mustang", "master", 
+        "michael", "shadow", "superman", "jennifer", "batman", "cookie", "jessica", 
+        "nicole", "thomas", "orange", "chicken", "biscuit", "hannah", "ashley",
+        
+        // Deportes y Equipos (Realistas)
+        "lakers", "cowboys", "yankees", "redsox", "steelers", "patriots", "barcelona", 
+        "madrid", "liverpool", "arsenal", "chelsea", "juventus", "ferrari", "porsche",
+        
+        // Nombres y Términos IT
+        "robert", "daniel", "william", "joseph", "cisco", "network", "server", 
+        "router", "switch", "access", "admin123", "root", "toor", "kali", "linux", 
+        "windows", "ubuntu", "system", "manager", "support", "service", "oracle",
+        
+        // Palabras de diccionario comunes en inglés/español
+        "shadow", "hunter", "killer", "matrix", "secret", "scanner", "freedom", 
+        "starwars", "pokemon", "naruto", "joker", "harley", "monster", "beautiful", 
+        "princess", "butterfly", "flower", "garden", "sunset", "sunrise", "moonlight",
+        "familia", "teamo", "corazon", "madre", "padre", "dios", "jesus", "cristo",
+        "libertad", "siempre", "juntos", "amigos", "fiesta", "musica", "guitara",
+        
+        // Frases y Patrones Largos
+        "letmeout", "letmein", "canttouchthis", "drowssap", "password123", "qazwsx", 
+        "zxcvbnm", "asdfghjkl", "qwertyuiop", "1q2w3e4r5t", "zaq1xsw2", "00000000",
+        "changeme", "dontask", "whatever", "nothing", "fuckyou", "asshole", "bitch", // (Comunes en diccionarios reales)
+        "iloveyou1", "iloveyou2", "myspace", "youtube", "facebook", "twitter", "google"
+
+
+       "123456", "password", "12345678", "qwerty", "123456789", "12345", "1234", "111111", "1234567", 
+        "dragon", "sunshine", "welcome", "football", "iloveyou", "master", "monkey", "letmeinh", "charlie", 
+        "michael", "superman", "princess", "mustang", "shadow", "666666", "baseball", "joshua", "secret", 
+        "killer", "daniel", "jessica", "michelle", "login", "hunter2", "ashley", "matthew", "andrew", 
+        "access", "liverpool", "arsenal", "manchester", "chelsea", "matrix", "pokemon", "starwars", 
+        "startrek", "batman", "harley", "joker", "justin", "scotland", "ireland", "williams", "amanda", 
+        "thomas", "robert", "nicole", "jennifer", "stephanie", "melissa", "anthony", "elizabeth", "brandon", 
+        "jordan", "rebecca", "brittany", "samuel", "christopher", "alexander", "samantha", "joseph", "benjamin", 
+        "katherine", "jonathan", "christian", "kimberly", "patricia", "stephen", "patrick", "richard", "tiffany", 
+        "charles", "shannon", "danielle", "george", "courtney", "heather", "amber", "laura", "sarah", "jamie", 
+        "mary", "megan", "rachel", "kelly", "sandra", "crystal", "andrea", "amy", "victoria", "maria", "ryan",
+        "barcelona", "realmadrid", "atletico", "sevilla", "valencia", "espana", "argentina", "mexico", 
+        "colombia", "chile", "peru", "brasil", "teamo", "amor", "corazon", "dios", "jesus", "cristo", 
+        "madre", "padre", "familia", "fiesta", "musica", "cerveza", "futbol", "pelota", "juego", "playa", 
+        "verano", "invierno", "cielo", "azul", "rojo", "verde", "blanco", "negro", "amarillo", "rosa", 
+        "naranja", "cafe", "perro", "gato", "caballo", "leon", "tigre", "lobo", "aguila", "halcon", "oso",
+        "admin", "root", "user", "guest", "test", "demo", "oracle", "cisco", "system", "support", 
+        "service", "manager", "server", "router", "switch", "network", "firewall", "security", "hacker", 
+        "java", "python", "linux", "windows", "macos", "ubuntu", "debian", "kali", "android", "iphone", 
+        "samsung", "huawei", "xiaomi", "nokia", "sony", "xbox", "playstation", "nintendo", "steam", "game",
+        "metallica", "nirvana", "beatles", "queen", "pinkfloyd", "ledzeppelin", "acdc", "gunsnroses", 
+        "coldplay", "imagine", "dragons", "linkin", "park", "eminem", "shakira", "rihanna", "beyonce", 
+        "messi", "ronaldo", "neymar", "mbappe", "haland", "lebron", "curry", "jordan", "kobe", "shaq",
+        "toyota", "honda", "ford", "chevrolet", "nissan", "bmw", "mercedes", "audi", "ferrari", "porsche",
+        "lamborghini", "bugatti", "tesla", "volvo", "volkswagen", "peugeot", "renault", "fiat", "jeep",
+        "google", "facebook", "twitter", "instagram", "youtube", "linkedin", "tiktok", "snapchat", "pinterest",
+        "amazon", "ebay", "netflix", "spotify", "twitch", "discord", "whatsapp", "telegram", "signal",
+        "qwertyuiop", "asdfghjkl", "zxcvbnm", "1q2w3e4r", "1a2s3d4f", "1z2x3c4v", "password123", "admin123",
+        "hello", "world", "lovely", "beautiful", "wonderful", "amazing", "forever", "always", "together",
+        "freedom", "victory", "glory", "peace", "hope", "faith", "dream", "believe", "success", "power",
+        "money", "cash", "gold", "silver", "dollar", "euro", "bitcoin", "crypto", "blockchain", "wallet"
+
+
+       "123456", "123456789", "picture1", "password", "12345678", "111111", "123123", "12345", "1234567890", "senha",
+        "qwerty", "1234567", "sunshine", "iloveyou", "dragon", "welcome", "charlie", "princess", "football", "monkey",
+        "michael", "joshua", "letmeinh", "mustang", "shadow", "master", "superman", "jennifer", "baseball", "daniel",
+        "jessica", "camera", "cookie", "chocolate", "michelle", "hannah", "thomas", "lovely", "secret", "ashley",
+        "1234567891", "hunter2", "basket", "american", "matthew", "jordan", "london", "nicole", "222222", "666666",
+        "samantha", "andrew", "barcelona", "amanda", "love", "password123", "melissa", "liverpool", "killer", "server",
+        "chelsea", "justin", "williams", "alexander", "chicago", "sarah", "monkey1", "elizabeth", "brandon", "network",
+        "system", "manager", "princess1", "stephanie", "tiffany", "anthony", "computer", "circle", "daddy", "rebecca",
+        "robert", "fucker", "chicken", "pepper", "katherine", "austin", "flower", "access", "purple", "taylor",
+        "joseph", "spring", "startrek", "bryan", "jonathan", "christopher", "patrick", "scotland", "william", "andrea",
+        "admin", "admin123", "root", "guest", "flash", "butterfly", "shannon", "harley", "monster", "angel",
+        "baby", "beauty", "biscuit", "brenda", "carlos", "chris", "cisco", "claire", "college", "cool",
+        "daisy", "david", "debbie", "donald", "double", "dream", "eagle", "edward", "emily", "energy",
+        "eric", "family", "felix", "ferrari", "fifty", "fish", "florida", "freedom", "friday", "friend",
+        "future", "gabriel", "garden", "george", "ginger", "golden", "guitar", "hamster", "happy", "harris",
+        "harry", "hearts", "heaven", "hello", "honey", "horse", "house", "india", "irish", "island",
+        "jack", "jackson", "jacob", "james", "jamie", "janet", "jason", "jazz", "jean", "jeff",
+        "jesus", "jimmy", "john", "johnny", "jones", "julia", "julie", "justin", "karen", "katie",
+        "kevin", "kim", "king", "kitty", "knight", "laker", "laura", "lauren", "lemon", "lewis",
+        "light", "lisa", "louis", "lucky", "magic", "man", "maria", "mark", "martin", "mary",
+        "max", "megan", "metal", "mike", "miles", "milk", "miller", "mind", "mickey", "minnie",
+        "model", "money", "moon", "morris", "mouse", "movie", "music", "nancy", "nathan", "nature",
+        "navy", "nick", "night", "ninja", "noah", "north", "number", "nurse", "ocean", "oliver",
+        "olivia", "one", "orange", "oscar", "owen", "panda", "paris", "park", "party", "paul",
+        "peace", "peanut", "peter", "phone", "photo", "piano", "pilot", "pink", "pizza", "plane",
+        "planet", "player", "pluto", "police", "pool", "power", "prince", "punk", "puppy", "queen",
+        "radio", "rain", "ralph", "ranch", "randy", "raven", "ray", "ready", "real", "red",
+        "richard", "rick", "rider", "right", "river", "road", "robin", "rock", "rocky", "roger",
+        "roman", "rose", "roy", "ruby", "rule", "run", "ryan", "sally", "sam", "sand",
+        "sandra", "sandy", "school", "scott", "scout", "sea", "sean", "seven", "sexy", "shane",
+        "shark", "sharon", "sheila", "ship", "shoe", "shop", "shot", "show", "side", "silver",
+        "simon", "simple", "sing", "single", "sister", "skate", "sky", "sleep", "smile", "smith",
+        "smoke", "snake", "snow", "soccer", "soft", "solar", "solid", "song", "sonic", "sony",
+        "sound", "south", "space", "spade", "speed", "spider", "spirit", "sport", "spot", "spring",
+        "star", "start", "state", "steel", "steve", "stone", "storm", "story", "street", "strike",
+        "studio", "style", "sugar", "summer", "sun", "super", "susan", "sweet", "swim", "sword",
+        "table", "tank", "target", "team", "teddy", "tennis", "terry", "texas", "the", "tiger",
+        "time", "tina", "title", "toast", "today", "tom", "tommy", "tony", "top", "total",
+        "touch", "tour", "tower", "town", "toy", "track", "trade", "train", "tree", "trip",
+        "truck", "trust", "truth", "tulip", "tune", "turn", "twin", "tyler", "ultra", "uncle",
+        "union", "unit", "united", "user", "valley", "value", "video", "view", "vinyl", "violet",
+        "virus", "vision", "voice", "volvo", "walk", "wall", "walter", "war", "water", "wave",
+        "wayne", "web", "week", "west", "whale", "what", "white", "whole", "wild", "will",
+        "wind", "wing", "winner", "winter", "wish", "wolf", "woman", "wood", "work", "world",
+        "write", "wrong", "xbox", "xray", "year", "yellow", "yes", "yoga", "young", "zebra",
+        "zero", "zone", "zoom", "101010", "121212", "112233", "000000", "0987654321", "654321", "987654321",
+        "1q2w3e4r5t6y", "1a2s3d4f5g", "zxcvbnm", "asdfghjkl", "qwertyuiop", "qa1ws2ed3", "wsxzaq123", "plmokn123",
+        "admin!", "pass!", "user!", "cisco!", "kick!", "love!", "hate!", "fuck!", "shit!", "damn!",
+        "god!", "hell!", "yeah!", "baby!", "cool!", "good!", "nice!", "best!", "fire!", "ice!",
+        "pass1", "pass2", "pass3", "pass4", "pass5", "pass12", "pass123", "pass1234", "pass2010", "pass2011",
+        "pass2012", "pass2013", "pass2014", "pass2015", "pass2016", "pass2017", "pass2018", "pass2019", "pass2020",
+        "juan123", "pedro123", "maria123", "lucas123", "mateo123", "daniel123", "david123", "jose123", "carlos123",
+        "admin2020", "admin2021", "admin2022", "admin2023", "admin2024", "admin2025", "clave123", "segura123",
+        "master123", "cyber123", "hacker123", "linux123", "windows1", "ubuntu1", "debian1", "kali123",
+        "cisco123", "router1", "switch1", "server1", "juego123", "play123", "steam123", "game123",
+        "messi10", "cr7", "neymar11", "kb24", "mj23", "lbj23", "tb12", "sr4", "lm10",
+        "realmadrid", "atleti", "betis", "sevillafc", "valenciacf", "boca", "river", "racing", "independiente",
+        "colocolo", "udechile", "ucatolica", "alianza", "universitario", "cristal", "nacional", "penarol",
+        "flamengo", "palmeiras", "santos", "saopaulo", "corinthians", "gremio", "inter", "cruzeiro",
+        "america", "chivas", "cruzazul", "pumas", "tigres", "monterrey", "toluca", "leon",
+        "colombia", "bogota", "medellin", "cali", "barranquilla", "cartagena", "pereira", "manizales",
+        "argentina", "buenosaires", "cordoba", "rosario", "mendoza", "tucuman", "salta", "neuquen",
+        "espana", "madrid", "barcelona", "valencia", "sevilla", "zaragoza", "malaga", "murcia",
+        "mexico", "guadalajara", "monterrey", "puebla", "toluca", "tijuana", "leon", "juarez",
+        "peru", "lima", "arequipa", "trujillo", "chiclayo", "piura", "iquitos", "cusco",
+        "chile", "santiago", "valparaiso", "concepcion", "laserena", "antofagasta", "temuco", "rancagua",
+        "teamo", "teamomucho", "teamoo", "teamooo", "teamo1", "teamo123", "amoremio", "mivida",
+        "princesa", "reina", "bebe", "cariño", "corazon", "cielo", "sol", "luna",
+        "flaca", "gorda", "negra", "rubia", "chula", "linda", "hermosa", "guapa",
+        "pokemon", "pikachu", "charmander", "bulbasaur", "squirtle", "charizard", "mewtwo", "eevee",
+        "goku", "vegeta", "gohan", "trunks", "piccolo", "krillin", "freezer", "cell",
+        "naruto", "sasuke", "sakura", "kakashi", "itachi", "hinata", "gaara", "boruto",
+        "luffy", "zoro", "nami", "usopp", "sanji", "chopper", "robin", "franky",
+        "batman", "robin", "joker", "superman", "wonder", "flash", "aquaman", "cyborg",
+        "ironman", "cap", "thor", "hulk", "blackwidow", "hawkeye", "spiderman", "venom",
+        "starwars", "yoda", "vader", "luke", "leia", "hansolo", "chewie", "r2d2",
+        "frodo", "sam", "gandalf", "aragorn", "legolas", "gimli", "sauron", "ring",
+        "harry", "ron", "hermione", "draco", "snape", "dumbledore", "hagrid", "voldemort",
+        "winter", "summer", "spring", "autumn", "fall", "rain", "snow", "wind",
+        "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",
+        "january", "february", "march", "april", "may", "june", "july", "august",
+        "september", "october", "november", "december", "red", "blue", "green", "yellow",
+        "black", "white", "orange", "purple", "pink", "brown", "grey", "silver",
+        "gold", "one", "two", "three", "four", "five", "six", "seven", "eight",
+        "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen",
+        "seventeen", "eighteen", "nineteen", "twenty", "thirty", "forty", "fifty", "sixty",
+        "seventy", "eighty", "ninety", "hundred", "thousand", "million", "billion", "trillion"
+
+
+       // --- 1. Top Global & Cortas ---
+        "123456", "password", "12345678", "qwerty", "123456789", "12345", "1234", "111111", "1234567", "dragon",
+        "123123", "baseball", "football", "shadow", "mustang", "superman", "jordan", "michael", "1234567890", "222222",
+        "qwertyuiop", "sunshine", "princess", "iloveyou", "master", "monkey", "666666", "harley", "battery", "charge",
+        
+        // --- 2. Intentos de "Seguridad" Humana (Nombres + Fechas + Símbolos) ---
+        "Password123", "Password1", "Password!", "Admin123", "Admin123!", "Admin@123", "admin@123", "Pass@123",
+        "Secret123", "Secret!", "Welcome1", "Welcome123", "Welcome!", "Welcome@123", "ChangeMe", "Changeme1",
+        "Summer2023", "Summer2024", "Summer2025", "Winter2023", "Winter2024", "Winter2025", "Spring2024", "Autumn2024",
+        "Monday1", "Tuesday1", "Wednesday1", "December2024", "January2025", "March2025!", "August2024!",
+        "Barcelona1", "Madrid1", "Liverpool1", "Arsenal123", "Chelsea!", "Lakers1", "Cowboys!", "Yankees1",
+        "Jennifer1", "Jessica1", "Michelle1", "Ashley123", "Amanda!", "Sarah@123", "Melissa1", "Nicole!",
+        "Robert123", "Daniel1", "Michael1", "David123", "James!", "William1", "Joseph!", "Thomas123",
+        "Pokemon1", "Starwars1", "Startrek1", "Batman1", "Superman1", "Matrix1", "Dragon1", "Monkey1",
+        "Loveyou1", "Iloveyou1", "Forever1", "Sunshine1", "Babygirl1", "Princess1", "Angel123", "Sweetheart1",
+        "Google123", "Facebook1", "Twitter1", "Youtube1", "Linkedin1", "Amazon1", "Netflix1", "Spotify1",
+        
+        // --- 3. Patrones de Teclado Complejos (Shift + Teclas) ---
+        "QWERTY", "ASDFGH", "ZXCVBN", "QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM", "1Q2W3E4R", "1A2s3D4f",
+        "!QAZ2wsx", "!QAZxsw2", "#EDC4rfv", "1qaz@WSX", "zaq1@WSX", "xsw2#EDC", "cde3$RFV", "vfr4%TGB",
+        "123qweASD", "1234qwerASDF", "1qazXSW@", "1234567890-=", "`1234567890-=", "qwerty!@#", "asdfgh!@#",
+        "qazwsxedc", "plmoknijb", "oknijbuhv", "ygvtfcdrx", "tfcrdxesz", "rdxeszwaq", "mko098", "nji987",
+        
+        // --- 4. Leet Speak (Sustitución de Letras por Números/Símbolos) ---
+        "P@ssword", "P@ssw0rd", "p@ssword", "p@ssw0rd", "P4ssword", "p4ssword", "Pa$$word", "pa$$word",
+        "Adm1n", "@dmin", "@dm1n", "Adm!n", "R00t", "r00t", "T00r", "t00r", "SuP3r", "S3cr3t", "s3cr3t",
+        "H@cker", "H4cker", "h@cker", "h4cker", "L0g1n", "l0g1n", "Acc3ss", "acc3ss", "M@ster", "m@ster",
+        "Dr@g0n", "dr@g0n", "Sh@d0w", "sh@d0w", "M0nk3y", "m0nk3y", "Ch@rl13", "ch@rl13", "Pr1nc3ss",
+        "pr1nc3ss", "B@seb@ll", "b@seb@ll", "F00tb@ll", "f00tb@ll", "Ilov3you", "ilov3you", "Letm31n",
+        "G0ogl3", "g0ogl3", "Faceb00k", "faceb00k", "Tw1tt3r", "tw1tt3r", "Y0utub3", "y0utub3", "Am@z0n",
+        "Micr0s0ft", "micr0s0ft", "W1nd0ws", "w1nd0ws", "L1nux", "l1nux", "Ubuntu", "ubuntu", "K@l1",
+        
+        // --- 5. Frases Largas (Passphrases - Alta seguridad realista) ---
+        "thisismypassword", "idontknow", "icanthaveyou", "iwanttobreakfree", "letitbe", "stairwaytoheaven",
+        "sweethomealabama", "hotelcalifornia", "bohemianrhapsody", "smellsliketeenspirit", "rollinginthedeep",
+        "someonelikeyou", "justthewayyouare", "whatmakesyoubeautiful", "babyonemoretime", "oopsididitagain",
+        "mynameisjeff", "lukeyouaremyfather", "maytheforcebewithyou", "houstonwehaveaproblem", "illbeback",
+        "hasta-la-vista", "winter-is-coming", "you-know-nothing", "got-milk", "where-is-the-love",
+        "correct-horse-battery-staple", "security-is-important", "changeme-please", "dont-forget-me",
+        "one-two-three-four", "testing-one-two", "password-is-password", "admin-is-admin",
+        
+        // --- 6. Palabras de Diccionario (Español/Inglés Extendido) ---
+        "abogado", "actor", "adulto", "agente", "aire", "alcalde", "alcohol", "aldea", "alerta", "algo",
+        "alma", "alto", "altura", "alumno", "amado", "amante", "amiga", "amigo", "anillo", "animal",
+        "antes", "antiguo", "anual", "apoyo", "aquel", "arbol", "arena", "arma", "arroz", "arte",
+        "autor", "avion", "aviso", "ayuda", "azul", "baile", "banco", "banda", "baño", "barco",
+        "barrio", "base", "basura", "bebe", "bebida", "bello", "beso", "bestia", "bicho", "bien",
+        "bolsa", "bomba", "borde", "bosque", "brazo", "breve", "broma", "bruto", "bueno", "burro",
+        "buscar", "cable", "cabo", "cabra", "cacao", "cafe", "caida", "caja", "calle", "cama",
+        "campo", "canal", "canto", "caos", "capa", "cara", "carga", "carne", "carro", "carta",
+        "casco", "caso", "causa", "caza", "celda", "cena", "cero", "cerro", "cesto", "chico",
+        "chino", "cielo", "cien", "cine", "cinta", "cita", "civil", "clase", "clave", "clima",
+        "club", "cobre", "coche", "coco", "cola", "color", "coma", "comer", "comun", "copa",
+        "copia", "coro", "corto", "cosa", "costa", "crema", "cruce", "crudo", "cruz", "cuadro",
+        "cuarto", "cubo", "cuello", "cuento", "cuero", "cuerpo", "cueva", "culpa", "culto", "cumbre",
+        "cuota", "curso", "curva", "dama", "daño", "dato", "deber", "dedo", "delta", "demo",
+        "denso", "diente", "dieta", "diez", "digno", "dinero", "disco", "divino", "doble", "doce",
+        "dolor", "dosis", "duda", "dueño", "dulce", "duro", "eje", "elite", "ella", "ello",
+        "enero", "enfermo", "enlace", "enorme", "entero", "envio", "epoca", "equipo", "error", "escala",
+        "escape", "esfera", "espada", "espejo", "espia", "esposa", "esposo", "estado", "este", "estilo",
+        "etapa", "eterno", "etica", "etnia", "exito", "extra", "fama", "fango", "fase", "fauna",
+        "favor", "fecha", "feria", "fibra", "ficha", "fiel", "fiera", "fiesta", "figura", "fila",
+        "filme", "filo", "final", "finca", "fino", "firma", "firme", "flaco", "flecha", "flora",
+        "flota", "flujo", "foco", "folio", "fondo", "forma", "foro", "foto", "frase", "freno",
+        "frente", "fresco", "frio", "fruta", "fruto", "fuego", "fuente", "fuerte", "fuerza", "fuga",
+        "fumar", "furia", "futbol", "futuro", "gama", "ganar", "gato", "gente", "gesto", "gira",
+        "globo", "gloria", "golpe", "gordo", "goma", "gota", "gozo", "grado", "gramo", "grande",
+        "grano", "grasa", "grave", "grieta", "gris", "grito", "grupo", "guante", "guapo", "guerra",
+        "guia", "guion", "gusto", "habil", "habla", "hacer", "hacha", "hambre", "harina", "hasta",
+        "hecho", "helado", "heroe", "hielo", "hierba", "hierro", "higa", "hijo", "hilo", "himno",
+        "huevo", "huida", "humano", "humo", "humor", "icono", "idea", "ideal", "igual", "imagen",
+        "iman", "impar", "inicio", "isla", "jabon", "jardin", "jarra", "jaula", "jefe", "joven",
+        "joya", "juego", "juez", "jugo", "julio", "junio", "junta", "junto", "justo", "kilo",
+        "labor", "lado", "lago", "lana", "lanza", "lapiz", "largo", "larva", "laser", "latigo",
+        "latino", "lavar", "lazo", "leche", "lecho", "legal", "lejos", "lento", "leña", "leon",
+        "letra", "leve", "ley", "libra", "libre", "libro", "lider", "liga", "lima", "limon",
+        "linea", "lino", "lista", "listo", "litro", "llave", "lleno", "lluvia", "lobo", "loco",
+        "lodo", "logro", "loma", "lona", "lote", "lucha", "luego", "lugar", "lujo", "luna",
+        "lunes", "luz", "macho", "madera", "madre", "maestro", "magia", "mago", "maiz", "malla",
+        "malo", "mama", "mando", "manejo", "manga", "mano", "manta", "manto", "mapa", "marca",
+        "marco", "marea", "mareo", "marfil", "margen", "marido", "marino", "masa", "matar", "mate",
+        "mayo", "mayor", "mecha", "medio", "miedo", "miel", "miembro", "mesa", "meta", "metro",
+        "mezcla", "miedo", "miel", "miembro", "miga", "mil", "milla", "mina", "minero", "minimo",
+        "mirada", "misa", "misil", "mismo", "mitad", "mito", "moda", "modo", "moho", "molde",
+        "moneda", "monje", "mono", "monte", "monto", "moral", "morir", "moro", "mosca", "moto",
+        "motor", "movil", "mozo", "mucho", "mueble", "muelle", "muerte", "muerto", "mujer", "mula",
+        "multa", "mundo", "muno", "muro", "museo", "musgo", "musica", "muslo", "mutuo", "nacer",
+        "nacion", "nada", "nadar", "naipes", "naranja", "nariz", "natal", "nave", "negar", "negro",
+        "nervio", "nexo", "nicho", "nido", "niebla", "nieta", "nieto", "nieve", "niña", "niño",
+        "nivel", "noble", "noche", "nodo", "nombre", "norma", "norte", "nota", "notar", "novela",
+        "novia", "novio", "nube", "nuca", "nucleo", "nudo", "nuera", "nuevo", "nuez", "numero",
+        "nunca", "obispo", "obra", "obrero", "ocaso", "oceano", "ocio", "ocupar", "oeste", "oferta",
+        "oficio", "oido", "ojo", "ola", "oleo", "olor", "olla", "olmo", "onda", "once",
+        "opera", "opinar", "optar", "orden", "oreja", "organo", "orgullo", "origen", "orilla", "oro",
+        "osado", "oscuro", "oso", "ostra", "otoño", "otro", "oveja", "ovulo", "oxido", "pacto",
+        "padre", "paga", "pagar", "pagina", "pago", "pais", "paja", "pajaro", "pala", "palma",
+        "palo", "pan", "pana", "panel", "panico", "paño", "papa", "papel", "par", "parar",
+        "pared", "pareja", "paro", "parque", "parte", "parto", "pasado", "pasar", "paseo", "pasion",
+        "paso", "pasta", "pata", "patio", "pato", "patria", "pausa", "pauta", "pava", "pavo",
+        "paz", "pecho", "pedazo", "pedido", "pedir", "pegar", "peine", "pelo", "pelota", "pena",
+        "peña", "peon", "peor", "pepino", "peque", "pera", "perder", "perfil", "perla", "perro",
+        "pesar", "pesca", "peso", "peste", "petalo", "pez", "piano", "picar", "pico", "pie",
+        "piedra", "piel", "pieza", "pila", "pilar", "piloto", "pino", "pintar", "pintor", "piña",
+        "piojo", "pipa", "piso", "pista", "pito", "placa", "placer", "plaga", "plan", "plana",
+        "plano", "planta", "plata", "plato", "playa", "plaza", "plazo", "pleno", "plomo", "pluma",
+        "pobre", "poco", "poder", "podio", "poema", "poeta", "polo", "polvo", "pomo", "poner",
+        "popa", "popular", "poro", "porra", "porta", "porte", "posar", "pose", "postre", "pozo",
+        "prado", "precio", "premio", "prensa", "preso", "prima", "primo", "prisa", "proa", "probar",
+        "problema", "proceso", "producto", "profeta", "profundo", "programa", "pronto", "propio", "prueba", "pueblo",
+        "puente", "puerta", "puerto", "puesto", "pulga", "pulmon", "pulpo", "pulso", "puma", "punta",
+        "punto", "puño", "puro", "queja", "quemar", "querer", "queso", "quien", "quieto", "quimica",
+        "quinto", "quitar", "rabia", "rabo", "radar", "radio", "raiz", "rama", "ramo", "rana",
+        "rango", "rapido", "rapto", "raro", "rasgo", "rata", "rato", "raton", "raya", "raza",
+        "razon", "real", "receta", "recibo", "recto", "red", "refugio", "regalo", "regim", "regla",
+        "reina", "reino", "reir", "reja", "relato", "relevo", "reloj", "remo", "rencor", "renta",
+        "repaso", "reposo", "reptil", "res", "resina", "respeto", "resto", "reto", "reunion", "reves",
+        "rey", "rezar", "rico", "riego", "riesgo", "rifa", "rifle", "rigido", "rigor", "rima",
+        "rincon", "riñon", "rio", "riqueza", "risa", "ritmo", "rito", "rival", "rizado", "roble",
+        "robo", "robot", "robusto", "roca", "rocio", "rodaja", "rodar", "rodeo", "rodilla", "rojo",
+        "rollo", "romano", "romper", "ropa", "rosa", "rostro", "roto", "rubio", "rubor", "rudo",
+        "rueda", "ruego", "ruido", "ruina", "rulo", "rumbo", "rumor", "ruta", "rutina", "saber",
+        "sabio", "sabor", "saco", "sacro", "saeta", "sagaz", "saldo", "salida", "salir", "salmon",
+        "salon", "salsa", "salto", "salud", "saludo", "salvia", "sangre", "santo", "sapo", "saque",
+        "saten", "satelite", "sauce", "sauna", "savia", "sazon", "secar", "seco", "secreto", "secta",
+        "sector", "seda", "sede", "sello", "selva", "semana", "semilla", "senda", "seno", "señal",
+        "señor", "señora", "seña", "sepalo", "sepia", "septimo", "sequia", "ser", "serie", "serio",
+        "servir", "sesion", "seta", "seto", "sexo", "sexto", "short", "show", "sidra", "siempre",
+        "sierra", "siesta", "siglo", "signo", "silba", "silla", "sillon", "sima", "simbolo", "simio",
+        "simple", "sincero", "sino", "sintoma", "sirena", "sitio", "sobra", "sobre", "socio", "sodio",
+        "sofa", "soga", "soja", "sol", "sola", "solar", "soldado", "soledad", "solido", "solito",
+        "solo", "sombra", "sombrero", "son", "sonar", "sonda", "sonido", "sopa", "soplo", "sordo",
+        "sorna", "sorteo", "soso", "sosten", "sotana", "sotano", "suave", "subir", "sucio", "sudor",
+        "suegra", "suegro", "suela", "suelo", "suelto", "sueño", "suerte", "sujeto", "suma", "sumo",
+        "super", "sur", "surco", "susto", "sutil", "tabla", "tabaco", "tabique", "tableta", "taco",
+        "tacto", "tajo", "tala", "talco", "taller", "tallo", "talon", "tamano", "tambor", "tango",
+        "tanque", "tapa", "tapiz", "tapara", "tapera", "tapia", "tapiz", "tapon", "taquilla", "tarde",
+        "tarea", "tarifa", "tarjeta", "tarro", "tarta", "tasa", "taxi", "taza", "teatro", "techo",
+        "tecla", "tecnica", "tejado", "tejido", "tela", "telar", "tele", "tema", "temer", "temor",
+        "templo", "tenaz", "tendedero", "tenedor", "tener", "tenis", "tenso", "teoria", "terapia", "terco",
+        "termino", "ternero", "terreno", "terror", "tesis", "tesoro", "testigo", "texto", "tez", "ti",
+        "tia", "tibio", "tiburon", "tiempo", "tienda", "tierno", "tierra", "tigre", "tijera", "tilo",
+        "timbre", "timido", "timo", "timon", "tinta", "tinte", "tinto", "tio", "tipo", "tira",
+        "tiran", "tiro", "tiron", "titere", "titulo", "tiza", "toalla", "tobillo", "tocar", "tocino",
+        "todo", "toga", "toldo", "toma", "tomar", "tomate", "tono", "onto", "topacio", "tope",
+        "topo", "toque", "torax", "torero", "tormenta", "torneo", "toro", "torpe", "torre", "torta",
+        "tortuga", "tos", "tosco", "toser", "total", "toxico", "traba", "trabajo", "tractor", "tradicion",
+        "traer", "trafico", "trago", "traje", "trama", "tramo", "trampa", "trance", "trapo", "trasero",
+        "trasto", "trata", "trato", "trauma", "traza", "trebol", "trece", "tregua", "tren", "trenza",
+        "trepar", "tres", "tribu", "trigo", "trillizo", "trineo", "tripa", "triple", "triste", "triunfo",
+        "trofeo", "trompa", "trono", "tropa", "trote", "trozo", "truco", "trueno", "trucha", "tubo",
+        "tumba", "tumor", "tuna", "tunel", "tupido", "turba", "turbio", "turno", "tutor", "tuya",
+        "tuyo", "ubicar", "ubre", "ujier", "ulcera", "ultimo", "ultra", "umbral", "un", "una",
+        "uncion", "unidad", "unico", "unir", "universo", "uno", "untar", "uña", "uranio", "urbe",
+        "urgencia", "urna", "usar", "uso", "usted", "usual", "usura", "util", "uva", "vaca",
+        "vacio", "vacuno", "vagar", "vago", "vaina", "vajilla", "vale", "valer", "valido", "valle",
+        "valor", "vals", "valvula", "valla", "vampiro", "vapor", "vara", "variar", "vario", "varon",
+        "vaso", "vasto", "vecino", "veda", "vega", "vejez", "vela", "velar", "velero", "velo",
+        "veloz", "vena", "vencer", "venda", "vender", "veneno", "vengar", "venir", "venta", "venus",
+        "ver", "verano", "verbo", "verdad", "verde", "verdura", "verja", "verme", "verso", "vertebra",
+        "vertical", "vestido", "vestir", "veto", "via", "viaje", "vicio", "vida", "video", "vidrio",
+        "viejo", "viento", "vientre", "viernes", "viga", "vigia", "vigor", "vil", "villa", "vinagre",
+        "vino", "viña", "violin", "virgen", "virtud", "virus", "visita", "visper", "vista", "visto",
+        "viuda", "viudo", "vivaz", "vivero", "vivir", "vivo", "vocablo", "vocal", "vocear", "volar",
+        "volcan", "volumen", "volver", "vomito", "voraz", "votar", "voto", "voz", "vuelo", "vuelta",
+        "vulgar", "yate", "yegua", "yema", "yerno", "yeso", "yodo", "yoga", "yogur", "yunque",
+        "zafiro", "zanja", "zapato", "zona", "zorro", "zumo", "zurdo"
+       
         ];
         // ==========================================
 
@@ -787,3 +1234,4 @@
     </script>
 </body>
 </html>
+
