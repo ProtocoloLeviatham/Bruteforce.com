@@ -3,378 +3,787 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LEVIATHAM PROJECT - CLASSIFIED</title>
+    <title>LEVIATHAM | BRUTE FORCE UNIT</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        /* --- CORE STYLE & RESET --- */
         :root {
-            --term-green: #0f0;
-            --term-dim: #003300;
-            --term-bg: #000;
-            --font-stack: 'Courier New', Courier, monospace;
-        }
-        
-        * { box-sizing: border-box; user-select: none; }
-        
-        body, html {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
-            background-color: var(--term-bg);
-            color: var(--term-green);
-            font-family: var(--font-stack);
-            overflow: hidden; /* Evitar scroll del body */
-        }
-
-        /* --- CRT & VISUAL EFFECTS --- */
-        #canvas-bg {
-            position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 1;
-            opacity: 0.3;
+            --primary: #00ff00;
+            --secondary: #003300;
+            --danger: #ff0000;
+            --dark: #020202;
+            --glass: rgba(0, 15, 0, 0.95);
+            
+            /* Colores de Terminal Kali Linux (Tema Dragon) */
+            --term-bg: #0a0a0a;
+            --term-text: #cccccc;
+            --term-green: #22c55e;
+            --term-red: #ef4444;
+            --term-yellow: #eab308;
+            --term-blue: #3b82f6;
+            --term-gray: #6b7280;
         }
 
-        .crt-overlay {
-            position: fixed; top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
-            z-index: 999;
-        }
-        
-        .vignette {
-            position: fixed; top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            background: radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0,0,0,1) 100%);
-            pointer-events: none;
-            z-index: 998;
-        }
-
-        /* --- UI CONTAINER --- */
-        #interface {
-            position: relative; z-index: 10;
-            width: 100%; height: 100%;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            padding: 20px;
-            text-align: center;
-        }
-
-        /* --- TYPOGRAPHY & ANIMATIONS --- */
-        h1, h2, h3 {
-            text-shadow: 0 0 10px var(--term-green);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .glitch {
-            animation: glitch 1s linear infinite;
-        }
-
-        @keyframes glitch {
-            2%, 64% { transform: translate(2px,0) skew(0deg); }
-            4%, 60% { transform: translate(-2px,0) skew(0deg); }
-            62% { transform: translate(0,0) skew(5deg); }
-        }
-
-        .btn {
-            background: transparent;
-            border: 2px solid var(--term-green);
-            color: var(--term-green);
-            padding: 15px 30px;
-            margin: 10px;
-            font-family: var(--font-stack);
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: 0.3s;
-            text-transform: uppercase;
-            box-shadow: 0 0 5px var(--term-green);
-            width: 80%; max-width: 400px;
-        }
-
-        .btn:hover {
-            background: var(--term-green);
-            color: #000;
-            box-shadow: 0 0 20px var(--term-green);
-        }
-
-        input {
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid var(--term-green);
-            color: var(--term-green);
-            font-family: var(--font-stack);
-            font-size: 1.5rem;
-            text-align: center;
-            width: 80%;
-            outline: none;
-            margin-bottom: 20px;
-        }
-
-        /* --- SECTIONS LOGIC --- */
-        .section { display: none; width: 100%; max-width: 800px; }
-        .active { display: flex; flex-direction: column; align-items: center; animation: fadeIn 0.5s; }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* --- TERMINAL STYLE --- */
-        #terminal-view {
-            width: 100%; height: 90vh;
-            background: rgba(0, 10, 0, 0.9);
-            border: 1px solid var(--term-green);
-            font-size: 0.9rem;
-            text-align: left;
-            padding: 10px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        #logs {
-            height: 85%;
-            overflow-y: hidden; /* Auto scroll gestionado por JS */
+        body {
+            background-color: var(--dark);
+            color: var(--primary);
+            font-family: 'Share Tech Mono', monospace;
+            overflow-x: hidden;
+            margin: 0;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
         }
 
-        .log-entry {
-            margin: 2px 0;
-            white-space: nowrap;
+        /* --- FONDO RED NEURONAL --- */
+        #neural-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; opacity: 0.2; pointer-events: none;
         }
-        .log-fail { color: #cc0000; text-shadow: 0 0 2px red; }
-        .log-sys { color: #00ffff; }
-        .log-success { color: #0f0; background: #003300; font-weight: bold; }
+
+        /* --- EFECTO CRT & SCANLINES --- */
+        .crt::before {
+            content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 50; background-size: 100% 2px, 3px 100%; pointer-events: none;
+        }
+        .scanline {
+            width: 100%; height: 100px; z-index: 51;
+            background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0, 255, 0, 0.2) 50%, rgba(0,0,0,0) 100%);
+            opacity: 0.1; position: absolute; bottom: 100%;
+            animation: scanline 10s linear infinite; pointer-events: none;
+        }
+        @keyframes scanline { 0% { bottom: 100%; } 100% { bottom: -100%; } }
+
+        /* --- CONTENEDORES --- */
+        .container-main {
+            max-width: 1000px; margin: 0 auto; width: 100%; padding: 20px;
+            position: relative; z-index: 60; flex-grow: 1; display: flex; flex-direction: column; gap: 1.5rem;
+        }
+
+        .cyber-panel {
+            background: var(--glass);
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.1);
+            position: relative; overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .cyber-panel::after {
+            content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* BOTÓN VOLVER */
+        .close-btn {
+            position: absolute; top: 10px; right: 10px;
+            color: #666; font-family: 'Fira Code', monospace; font-weight: bold;
+            cursor: pointer; transition: color 0.2s; font-size: 1.2rem;
+            z-index: 70; padding: 5px 10px; border: 1px solid transparent;
+        }
+        .close-btn:hover { color: var(--danger); border-color: var(--danger); background: rgba(255,0,0,0.1); }
+
+        /* --- BOTONES & OPCIONES --- */
+        .btn-option {
+            border: 1px solid #333; background: rgba(0, 20, 0, 0.6);
+            color: #999; padding: 1rem; cursor: pointer;
+            transition: all 0.2s; display: flex; align-items: center; justify-content: space-between;
+            font-family: 'Fira Code', monospace; text-transform: uppercase; font-size: 0.85rem;
+        }
+        .btn-option:hover {
+            border-color: var(--primary); color: var(--primary);
+            background: rgba(0, 50, 0, 0.8); transform: translateX(3px);
+            box-shadow: -5px 0 10px rgba(0,255,0,0.1);
+        }
+        .btn-option.selected {
+            background: var(--primary); color: black; font-weight: bold;
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        /* --- TERMINAL REALISTA KALI LINUX --- */
+        .terminal-window {
+            font-family: 'Fira Code', monospace; 
+            background-color: var(--term-bg);
+            border: 1px solid #30363d; 
+            height: 450px; 
+            overflow-y: auto;
+            padding: 12px; 
+            font-size: 11px; 
+            color: var(--term-text);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+            line-height: 1.5;
+            position: relative;
+            /* Fondo sutil de rejilla */
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* LOGO CENTRAL LEVIATHAN (MARCA DE AGUA) */
+        .terminal-watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(255, 255, 255, 0.04); /* Muy sutil */
+            pointer-events: none;
+            z-index: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+        .terminal-watermark i {
+            font-size: 10rem;
+            filter: drop-shadow(0 0 20px rgba(0, 255, 0, 0.1));
+        }
+        .terminal-watermark span {
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: 8px;
+            font-family: 'Share Tech Mono', monospace;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+
+        .log-line {
+            position: relative; z-index: 1;
+            margin-bottom: 2px; 
+            display: flex; 
+            gap: 8px; 
+            align-items: center; 
+            flex-wrap: wrap;
+            opacity: 0;
+            font-size: 10px;
+            animation: slideIn 0.05s forwards;
+        }
+        @keyframes slideIn { 
+            from { opacity: 0; transform: translateX(-5px); }
+            to { opacity: 1; transform: translateX(0); } 
+        }
         
-        #stats-bar {
-            border-top: 1px solid var(--term-green);
-            padding-top: 5px;
-            display: flex; justify-content: space-between;
-            font-size: 0.8rem;
+        /* Colores de logs realistas */
+        .t-time { color: var(--term-gray); font-size: 0.9em; flex-shrink: 0; }
+        .t-pass { color: #fff; font-weight: bold; word-break: break-all; }
+        .t-err { color: var(--term-red); font-weight: bold; white-space: nowrap; }
+        .t-dict { color: var(--term-blue); white-space: nowrap; }
+        .t-user { color: var(--term-yellow); word-break: break-all; }
+        .t-denied { color: #fff; background: var(--term-red); padding: 0 3px; font-weight: bold; font-size: 0.9em; border-radius: 2px; margin-left: auto; }
+        .t-prompt { color: var(--term-green); font-weight: bold; }
+        .t-path { color: var(--term-blue); font-weight: bold; }
+        .t-root { color: var(--term-red); font-weight: bold; }
+
+        /* Cursor Parpadeante */
+        .cursor-blink {
+            display: inline-block;
+            width: 8px;
+            height: 14px;
+            background-color: var(--term-text);
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* --- GLITCH TITLE --- */
+        .glitch {
+            font-size: 3rem; font-weight: 900; text-transform: uppercase; position: relative;
+            text-shadow: 2px 2px 0px #ff0000, -2px -2px 0px #0000ff;
+            animation: glitch-anim 3s infinite alternate;
+        }
+        @media(max-width: 768px) { .glitch { font-size: 1.8rem; } }
+        @keyframes glitch-anim {
+            0% { text-shadow: 2px 2px 0px #ff0000, -2px -2px 0px #0000ff; }
+            50% { text-shadow: -2px -2px 0px #ff0000, 2px 2px 0px #0000ff; }
+            100% { text-shadow: 2px -2px 0px #ff0000, -2px 2px 0px #0000ff; }
         }
 
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0d1117; }
+        ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 0; border: 1px solid #1c2128; }
+        ::-webkit-scrollbar-thumb:hover { background: #58a6ff; }
+
+        /* Footer Ticker */
+        .ticker-wrap { width: 100%; overflow: hidden; white-space: nowrap; background: #050505; color: var(--term-green); border-top: 1px solid #30363d; border-bottom: 1px solid #30363d; font-size: 0.75rem; font-family: 'Fira Code', monospace; padding: 4px 0; }
+        .ticker { display: inline-block; padding-left: 100%; animation: ticker 30s linear infinite; }
+        @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
+        
+        /* Animación Carga Manual */
+        @keyframes typing { from { width: 0 } to { width: 100% } }
     </style>
 </head>
-<body>
+<body class="crt">
+    <canvas id="neural-canvas"></canvas>
+    
+    <div class="container-main">
+        
+        <!-- HEADER -->
+        <header class="text-center border-b-4 border-green-900 pb-6 mb-2 bg-black/50 pt-6">
+            <h1 class="glitch tracking-widest text-white">LEVIATHAN BRUTE FORCE</h1>
+            <div class="flex justify-center gap-8 mt-2 text-xs font-bold tracking-widest font-mono">
+                <span class="text-green-600">UNIT: <span class="text-white">CIA_BLACK_OPS</span></span>
+                <span class="text-green-600">STATUS: <span class="text-primary animate-pulse">ACTIVE</span></span>
+                <span class="text-green-600">KERNEL: <span class="text-gray-400">v15.2.0-LVT</span></span>
+            </div>
+        </header>
 
-    <canvas id="canvas-bg"></canvas>
-    <div class="crt-overlay"></div>
-    <div class="vignette"></div>
-
-    <div id="interface">
-
-        <div id="sec-intro" class="section active">
-            <h1 class="glitch" style="font-size: 3rem; margin-bottom: 5px;">LEVIATHAM</h1>
-            <h3 style="margin-top: 0;">BRUTEFORCE FRAMEWORK v9.0</h3>
-            <p style="font-size: 0.8rem; opacity: 0.7;">INITIALIZING NEURAL LINK...</p>
-            <br>
-            <button class="btn" onclick="nextSection('sec-target')">INICIAR SISTEMA</button>
-        </div>
-
-        <div id="sec-target" class="section">
-            <h2>SELECCIONAR VECTOR DE ATAQUE</h2>
-            <button class="btn" onclick="selectTarget('GMAIL_SMTP')">CUENTAS GMAIL / GOOGLE</button>
-            <button class="btn" onclick="selectTarget('WPA2_HANDSHAKE')">RED WIFI / WPA2</button>
-            <button class="btn" onclick="selectTarget('AES_256_DECRYPT')">CLAVES DE CIFRADO (AES)</button>
-            <button class="btn" onclick="selectTarget('NETWORK_SSH_FTP')">SERVICIOS DE RED (SSH/FTP)</button>
-        </div>
-
-        <div id="sec-input" class="section">
-            <h2 id="target-label">DEFINIR OBJETIVO</h2>
-            <p>Ingrese ID, IP o Hash del objetivo:</p>
-            <input type="text" id="target-val" placeholder="ej: user@target.com / 192.168.1.15" autocomplete="off">
-            <button class="btn" onclick="nextSection('sec-attack')">CONFIRMAR OBJETIVO</button>
-        </div>
-
-        <div id="sec-attack" class="section">
-            <h2>MODALIDAD DE INTRUSIÓN</h2>
-            <button class="btn" onclick="setAttackMode('SIMPLE')">ATAQUE SIMPLE (Fuerza Bruta Estándar)</button>
-            <button class="btn" onclick="setAttackMode('DICCIONARIO')">ATAQUE DE DICCIONARIO (Wordlists)</button>
-            <button class="btn" onclick="setAttackMode('HIBRIDO')">ATAQUE HÍBRIDO (Reglas + Listas)</button>
-            <button class="btn" onclick="setAttackMode('LEVIATHAM_AI')" style="border-color: #00ffff; color: #00ffff; box-shadow: 0 0 10px #00ffff;">ATAQUE IMPULSADO POR IA LEVIATHAM</button>
-        </div>
-
-        <div id="sec-dict" class="section">
-            <h2>SELECCIONAR BASE DE DATOS</h2>
-            <p>Cargando módulos de inyección...</p>
-            <button class="btn" onclick="startTerminal('rockyou.txt')">ROCKYOU.TXT (Classic)</button>
-            <button class="btn" onclick="startTerminal('darkc0de.lst')">DARKC0DE.LST (Complejo)</button>
-            <button class="btn" onclick="startTerminal('leviatham_private.db')">LEVIATHAM PRIVATE DB (Optimizado)</button>
-            <button class="btn" onclick="startTerminal('custom_payload_gen')">GENERACIÓN PROCEDIMENTAL (Infinita)</button>
-        </div>
-
-        <div id="sec-terminal" class="section">
-            <div id="terminal-view">
-                <div id="logs"></div>
-                <div id="stats-bar">
-                    <span id="stat-target">TARGET: ---</span>
-                    <span id="stat-speed">SPEED: 0 k/s</span>
-                    <span id="stat-try">ATTEMPTS: 0</span>
+        <!-- PROTOCOLO -->
+        <div class="cyber-panel p-6 border-t border-green-500">
+            <h2 class="text-sm font-bold text-green-400 border-b border-green-800 mb-4 pb-2 flex justify-between font-mono">
+                <span>/// PROTOCOLO Y MANUAL OPERATIVO ///</span>
+                <i class="fas fa-book animate-pulse"></i>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-[10px] md:text-xs text-gray-400 font-mono">
+                <div>
+                    <div class="mb-2 border-l-2 border-red-600 pl-2">
+                        <strong class="text-red-500">MARCO LEGAL:</strong> Herramienta de simulación educativa. El acceso no autorizado a sistemas es un delito federal. Úsese solo en entornos controlados o con permiso explícito.
+                    </div>
+                    <div class="mb-2">
+                        <strong class="text-white">DEFINICIÓN:</strong> Suite de auditoría para probar la resistencia de credenciales mediante ataques de diccionario y heurística.
+                    </div>
+                    <div class="mb-2">
+                        <strong class="text-white">USO:</strong> Seleccione el vector de ataque > Configure el objetivo > Elija el método de intrusión > Ejecute la terminal.
+                    </div>
                 </div>
+                <div>
+                    <ul class="list-disc pl-4 space-y-1">
+                        <li><strong class="text-green-400">EMAIL:</strong> Auditoría de servicios SMTP/IMAP.</li>
+                        <li><strong class="text-blue-400">WIFI:</strong> Cracking de handshakes WPA/WEP.</li>
+                        <li><strong class="text-yellow-400">CRYPTO:</strong> Desencriptación de Hashes/Wallets.</li>
+                        <li><strong class="text-purple-400">SOCIAL:</strong> Fuerza bruta a perfiles de redes.</li>
+                        <li><strong class="text-cyan-400">WEB:</strong> Inyección en formularios HTTP/Login.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 1: CATEGORIA -->
+        <div id="step-1" class="cyber-panel p-6">
+            <div class="flex justify-between items-center mb-4 border-b border-gray-800 pb-2">
+                <h3 class="text-xl font-bold text-white font-mono">1. SELECCIONAR VECTOR</h3>
+                <i class="fas fa-network-wired text-green-600"></i>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- EMAIL -->
+                <div class="btn-option group" onclick="selectCategory('email')">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-envelope-open-text text-red-500 text-xl"></i>
+                        <div>
+                            <div class="font-bold text-white">SERVICIOS EMAIL</div>
+                            <div class="text-[9px] text-gray-500">IMAP / SMTP / POP3</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- WIFI -->
+                <div class="btn-option group" onclick="selectCategory('wifi')">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-wifi text-blue-500 text-xl"></i>
+                        <div>
+                            <div class="font-bold text-white">REDES WIFI</div>
+                            <div class="text-[9px] text-gray-500">HANDSHAKE / PMKID</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- CRYPTO -->
+                <div class="btn-option group" onclick="selectCategory('crypto')">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-fingerprint text-yellow-500 text-xl"></i>
+                        <div>
+                            <div class="font-bold text-white">CLAVES CIFRADO</div>
+                            <div class="text-[9px] text-gray-500">HASHCAT / JOHN</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- SOCIAL -->
+                <div class="btn-option group" onclick="selectCategory('social')">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-share-alt text-purple-500 text-xl"></i>
+                        <div>
+                            <div class="font-bold text-white">REDES SOCIALES</div>
+                            <div class="text-[9px] text-gray-500">API ENDPOINTS</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- URL -->
+                <div class="btn-option group" onclick="selectCategory('url')">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-globe text-cyan-500 text-xl"></i>
+                        <div>
+                            <div class="font-bold text-white">WEB ENDPOINT</div>
+                            <div class="text-[9px] text-gray-500">HTTP FORM / LOGIN</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2: OBJETIVO ESPECIFICO -->
+        <div id="step-2" class="hidden cyber-panel p-6 animate-[fadeIn_0.5s]">
+            <div class="close-btn" onclick="goBack(2)">X</div>
+            <h3 class="text-xl font-bold mb-4 flex items-center gap-2 text-white font-mono">
+                <span class="text-green-500">2.</span> CONFIGURAR OBJETIVO: <span id="cat-display" class="text-primary uppercase">---</span>
+            </h3>
+            
+            <div id="sub-options-container" class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6"></div>
+
+            <div id="primary-target-box" class="relative group mb-4">
+                <label id="target-label" class="text-[10px] font-bold text-green-800 mb-1 block uppercase">Target Identifier</label>
+                <div class="flex items-center bg-black border border-green-800 group-hover:border-green-500 transition-colors">
+                    <span class="p-3 bg-green-900/20 text-green-500 font-bold select-none font-mono">></span>
+                    <input type="text" id="target-input" class="w-full bg-transparent text-white p-3 outline-none font-mono" placeholder="...">
+                </div>
+            </div>
+
+            <div id="manual-html-panel" class="hidden mb-4">
+                <div class="bg-yellow-900/10 border border-yellow-600/50 p-3 mb-2 text-yellow-500 text-xs font-mono">
+                    <i class="fas fa-info-circle"></i> <strong>MODO MANUAL:</strong> Pega el código fuente HTML del formulario de login para un parsing exacto de los campos input.
+                </div>
+                <textarea id="html-input" class="w-full h-32 bg-black border border-yellow-800 text-yellow-500 text-xs p-2 font-mono outline-none" placeholder="<!-- Paste HTML Here -->"></textarea>
+            </div>
+
+            <div id="username-box" class="relative group hidden">
+                <label class="text-[10px] font-bold text-blue-800 mb-1 block uppercase">USUARIO OBJETIVO</label>
+                <div class="flex items-center bg-black border border-blue-800 group-hover:border-blue-500 transition-colors">
+                    <span class="p-3 bg-blue-900/20 text-blue-500 font-bold select-none font-mono">USER:</span>
+                    <input type="text" id="username-input" class="w-full bg-transparent text-white p-3 outline-none font-mono" placeholder="admin / user@target.com">
+                </div>
+            </div>
+
+            <div class="flex justify-end mt-6">
+                <button onclick="confirmStep2()" class="bg-green-900/80 border-b-4 border-green-600 text-white px-8 py-3 font-bold hover:bg-green-600 hover:text-black transition-all uppercase tracking-widest font-mono">
+                    CONFIRMAR OBJETIVO
+                </button>
+            </div>
+        </div>
+
+        <!-- LOADING SCREEN -->
+        <div id="url-scanner" class="hidden cyber-panel p-10 flex flex-col items-center justify-center text-center">
+            <i class="fas fa-terminal text-4xl text-cyan-500 mb-4 animate-pulse"></i>
+            <h3 class="text-xl font-bold text-white mb-2 font-mono">ANALIZANDO ENDPOINT...</h3>
+            <div class="font-mono text-xs text-cyan-400 mb-4 h-20 overflow-hidden w-full max-w-md text-left bg-black p-2 border border-cyan-900" id="scan-logs"></div>
+            <div class="w-full max-w-md bg-gray-900 h-1">
+                <div class="h-full bg-cyan-500 animate-[width_3s_ease-in-out] w-full"></div>
+            </div>
+        </div>
+
+        <!-- MANUAL PARSER -->
+        <div id="manual-parser" class="hidden cyber-panel p-10 flex flex-col items-center justify-center text-center">
+            <i class="fas fa-code text-4xl text-yellow-500 mb-4 animate-spin"></i>
+            <h3 class="text-xl font-bold text-white mb-2 font-mono">PARSING HTML SOURCE...</h3>
+            <div class="font-mono text-xs text-yellow-400 mb-4 w-full max-w-md text-left bg-black p-2 border border-yellow-900 h-24 overflow-hidden" id="parser-logs"></div>
+            <div class="w-full max-w-md bg-gray-900 h-1">
+                <div class="h-full bg-yellow-500 animate-[width_3s_ease-in-out] w-full"></div>
+            </div>
+        </div>
+
+        <!-- STEP 3: METODO -->
+        <div id="step-3" class="hidden cyber-panel p-6 animate-[fadeIn_0.5s]">
+            <div class="close-btn" onclick="goBack(3)">X</div>
+            <h3 class="text-xl font-bold mb-6 text-white font-mono">3. SELECCIONAR ALGORITMO</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div onclick="selectAttack('SIMPLE')" class="btn-option group">
+                    <div class="flex justify-between w-full items-center">
+                        <span class="text-white font-bold font-mono group-hover:text-green-400"><i class="fas fa-bolt text-yellow-400 mr-2"></i> SIMPLE</span> 
+                        <span class="text-[9px] border border-gray-600 px-1 text-gray-500">LENTO</span>
+                    </div>
+                </div>
+                <div onclick="selectAttack('DICCIONARIO')" class="btn-option group">
+                    <div class="flex justify-between w-full items-center">
+                        <span class="text-white font-bold font-mono group-hover:text-green-400"><i class="fas fa-book text-blue-400 mr-2"></i> DICCIONARIO</span> 
+                        <span class="text-[9px] border border-blue-600 px-1 text-blue-400">ESTÁNDAR</span>
+                    </div>
+                </div>
+                <div onclick="selectAttack('HIBRIDO')" class="btn-option group">
+                    <div class="flex justify-between w-full items-center">
+                        <span class="text-white font-bold font-mono group-hover:text-green-400"><i class="fas fa-random text-purple-400 mr-2"></i> HÍBRIDO</span> 
+                        <span class="text-[9px] border border-purple-600 px-1 text-purple-400">AVANZADO</span>
+                    </div>
+                </div>
+                <div onclick="selectAttack('AI')" class="btn-option group border-green-500 bg-green-900/10">
+                    <div class="flex justify-between w-full items-center">
+                        <span class="text-white font-bold font-mono group-hover:text-green-400"><i class="fas fa-brain text-green-400 animate-pulse mr-2"></i> IA LEVIATHAM</span> 
+                        <span class="text-[9px] bg-green-500 text-black px-1 font-bold">PREMIUM</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 4: DICCIONARIO -->
+        <div id="step-4" class="hidden cyber-panel p-6 animate-[fadeIn_0.5s]">
+            <div class="close-btn" onclick="goBack(4)">X</div>
+            <h3 class="text-xl font-bold mb-4 text-white font-mono">4. CARGAR WORDLIST</h3>
+            <div id="dictionary-list" class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-64 overflow-y-auto pr-2"></div>
+        </div>
+
+        <!-- STEP 5: CONSOLA -->
+        <div id="step-5" class="hidden cyber-panel p-1 border-t-2 border-gray-700 h-full flex flex-col bg-[#0d1117]">
+            <!-- Info Bar Style Linux -->
+            <div class="flex justify-between items-center border-b border-gray-700 pb-2 bg-[#161b22] p-2 font-mono text-xs">
+                <div class="flex gap-3 items-center">
+                    <div class="w-3 h-3 rounded-full bg-red-500 animate-pulse shadow-[0_0_10px_red]"></div>
+                    <span class="text-green-400 font-bold">root@leviatham</span>
+                    <span class="text-gray-400">/bin/bruteforce_ng</span>
+                </div>
+                <div class="text-right text-gray-300">
+                    <span id="attempt-counter">0 / 0</span>
+                </div>
+            </div>
+            
+            <div class="px-2 pb-1 bg-[#0d1117] text-[10px] font-mono flex gap-4 border-b border-gray-800 pt-1">
+                 <span class="text-gray-500">TARGET: <span id="term-target" class="text-white">---</span></span>
+                 <span class="text-gray-500">DICT: <span id="term-dict" class="text-green-500">---</span></span>
+                 <span class="text-gray-500">METHOD: <span id="term-method" class="text-blue-400 font-bold">---</span></span>
+            </div>
+
+            <!-- Terminal Window -->
+            <div id="terminal" class="terminal-window flex-grow mb-0 border-none">
+                <!-- Marca de Agua -->
+                <div class="terminal-watermark">
+                    <i class="fas fa-dragon"></i>
+                    <span>LEVIATHAN</span>
+                </div>
+            </div>
+
+            <!-- ProgressBar -->
+            <div class="w-full h-1 bg-gray-800"><div id="progress-bar" class="h-full bg-green-500 w-0"></div></div>
+
+            <!-- Abort Btn -->
+            <div class="p-2 bg-[#161b22] border-t border-gray-800">
+                <button id="abort-btn" onclick="abortAttack()" class="w-full bg-red-900/20 text-red-500 py-2 font-bold border border-red-900 hover:bg-red-900 hover:text-white transition-all font-mono text-sm flex items-center justify-center gap-2">
+                    <span>[CTRL+C]</span> INTERRUMPIR PROCESO
+                </button>
             </div>
         </div>
 
     </div>
 
+    <!-- FOOTER MEJORADO -->
+    <footer class="w-full border-t border-green-900 bg-black/90 p-2 text-[10px] md:text-xs font-mono relative z-50 mt-auto">
+        <div class="ticker-wrap">
+            <div class="ticker">+++ SYSTEM ALERT: LEVIATHAN CORE ACTIVE +++ ENCRYPTION: AES-256-GCM +++ BRUTEFORCE ENGINE V.15.2 +++ THREADS: 256 +++ CONNECTED TO NODE: ALPHA-9 +++ NETWORK STATUS: SECURE +++</div>
+        </div>
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center opacity-80 gap-2 text-center p-2">
+            <div class="flex flex-col items-start">
+                <span class="font-bold tracking-[0.2em] text-green-500 text-sm glitch" style="font-size: 1rem;">INDUSTRIAS LEVIATHAM © 2018-2025</span>
+                <span class="text-[9px] text-gray-500 uppercase">Department of Cyber Intelligence</span>
+            </div>
+            
+            <!-- Telemetría -->
+            <div class="flex flex-wrap justify-center gap-4 text-gray-400 font-bold border border-gray-800 bg-[#0d1117] p-1 px-3 rounded">
+                <span class="flex items-center gap-1"><i class="fas fa-microchip text-green-500"></i> CPU: <span class="text-white">12%</span></span>
+                <span class="flex items-center gap-1"><i class="fas fa-memory text-green-500"></i> RAM: <span class="text-white">1.2GB</span></span>
+                <span class="flex items-center gap-1"><i class="fas fa-network-wired text-green-500"></i> PING: <span class="text-white">4ms</span></span>
+                <span class="flex items-center gap-1"><i class="fas fa-clock text-green-500"></i> <span id="utc-clock" class="text-white">00:00:00</span></span>
+            </div>
+        </div>
+    </footer>
+
     <script>
-        // --- CONFIG & STATE ---
-        let currentTarget = "";
-        let attackMode = "";
-        let dictionary = "";
-        let attemptCount = 0;
-        let running = false;
-        
-        // --- DICTIONARY GENERATOR PARTS (To avoid repetition) ---
-        const prefixes = ["admin", "pass", "master", "user", "root", "secret", "access", "leviatham", "dragon", "shadow", "cyber", "system", "123456"];
-        const mid = ["123", "2024", "2025", "_", ".", "!", "@", "007", "99", "xx", "god"];
-        const suffixes = ["!", "123", "qwerty", "password", "login", "key", "token", "auth", "secure", "hacked"];
-        
-        // --- NEURAL NETWORK BACKGROUND ---
-        const canvas = document.getElementById('canvas-bg');
-        const ctx = canvas.getContext('2d');
-        let width, height, particles = [];
+        // ==========================================
+        // === DATABASE DE CONTRASEÑAS (EDITABLE) ===
+        // ==========================================
+        // Añade tus contraseñas aquí entre comillas y separadas por coma.
+        const passwordDB = [
+            "123456", "password", "12345678", "qwerty", "12345", "123456789", "123123", "111111", "1234567", 
+            "sunshine", "dragon", "welcome", "football", "monkey", "letmeinh", "iloveyou", "master", "michael", 
+            "charlie", "666666", "princess", "shadow", "mustang", "superman", "daniel", "joshua", "secret", 
+            "michelle", "killer", "login", "password123", "hunter2", "admin", "root", "toor", "kali", "cisco", 
+            "guest", "operator", "super", "support", "service", "network", "server", "cisco123", "manager", 
+            "system", "password1234", "changeme", "admin123", "qwertyuiop", "asdfghjkl", "zxcvbnm", "00000000",
+            "1234567890", "654321", "pass123", "admin!@#", "bruteforce", "hacking", "leviathan", "godmode",
+            "access", "router", "wifi123", "internet", "google", "facebook", "instagram", "twitter", "love"
+        ];
+        // ==========================================
 
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
+        let state = {
+            category: '', subOption: '', target: '', username: '', method: '', dictionary: '', totalLines: 0, isRunning: false, count: 0
+        };
+
+        const dictionaries = {
+            email: [{name: "RockYou_Email_v2.txt", size: "14.3 GB", count: 14300000, icon: "fas fa-envelope"}, {name: "BreachCompilation_2024.txt", size: "45 GB", count: 45000000, icon: "fas fa-database"}],
+            wifi: [{name: "WPA-Killer_v2.dic", size: "4.2 GB", count: 4200000, icon: "fas fa-wifi"}, {name: "Probable-Wordlists.txt", size: "200 MB", count: 200000, icon: "fas fa-file-alt"}],
+            crypto: [{name: "CrackStation_Dict.txt", size: "120 GB", count: 120000000, icon: "fas fa-hdd"}, {name: "Bitcoin_Brainwallets.txt", size: "500 MB", count: 5000000, icon: "fab fa-btc"}],
+            social: [{name: "Social_Engineering.txt", size: "50 MB", count: 500000, icon: "fas fa-users"}, {name: "Facebook_Leak.txt", size: "20 GB", count: 20000000, icon: "fab fa-facebook"}],
+            url: [{name: "Admin_Panels_Path.txt", size: "2 MB", count: 20000, icon: "fas fa-globe"}, {name: "SQLi_Payloads.txt", size: "5 MB", count: 50000, icon: "fas fa-code"}],
+            universal: [{name: "SecLists_Top10M.txt", size: "850 MB", count: 10000000, icon: "fas fa-list"}, {name: "Leviathan_AI_Gen.bin", size: "∞", count: 999999999, icon: "fas fa-brain"}]
+        };
+
+        // --- CLOCK ---
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('utc-clock').innerText = now.toISOString().split('T')[1].split('.')[0] + " Z";
+        }, 1000);
+
+        function goBack(currentStep) {
+            document.getElementById(`step-${currentStep}`).classList.add('hidden');
+            document.getElementById(`step-${currentStep-1}`).classList.remove('hidden');
         }
-        window.addEventListener('resize', resize);
-        resize();
 
-        class Particle {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.vx = (Math.random() - 0.5) * 1;
-                this.vy = (Math.random() - 0.5) * 1;
-            }
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                if (this.x < 0 || this.x > width) this.vx *= -1;
-                if (this.y < 0 || this.y > height) this.vy *= -1;
-            }
-        }
-
-        for (let i = 0; i < 60; i++) particles.push(new Particle());
-
-        function animateBg() {
-            ctx.clearRect(0, 0, width, height);
-            ctx.fillStyle = '#0f0';
-            ctx.strokeStyle = '#0f0';
+        function selectCategory(cat) {
+            state.category = cat;
+            const container = document.getElementById('sub-options-container');
+            const catDisplay = document.getElementById('cat-display');
+            const manualPanel = document.getElementById('manual-html-panel');
+            const primaryBox = document.getElementById('primary-target-box');
+            const targetLabel = document.getElementById('target-label');
+            const userBox = document.getElementById('username-box');
             
-            for (let i = 0; i < particles.length; i++) {
-                let p = particles[i];
-                p.update();
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-                ctx.fill();
-                
-                for (let j = i + 1; j < particles.length; j++) {
-                    let p2 = particles[j];
-                    let dist = Math.sqrt((p.x - p2.x)**2 + (p.y - p2.y)**2);
-                    if (dist < 150) {
-                        ctx.beginPath();
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(p2.x, p2.y);
-                        ctx.globalAlpha = 1 - (dist / 150);
-                        ctx.stroke();
-                        ctx.globalAlpha = 1;
-                    }
-                }
+            container.innerHTML = ''; manualPanel.classList.add('hidden'); userBox.classList.add('hidden'); primaryBox.classList.remove('hidden');
+
+            let opts = [];
+            if(cat === 'email') { 
+                catDisplay.innerText = "EMAIL SERVICE"; userBox.classList.remove('hidden'); targetLabel.innerText = "SERVER ADDRESS"; 
+                opts = [
+                    {name: "GMAIL", color: "text-red-500", icon: "fab fa-google"},
+                    {name: "OUTLOOK", color: "text-blue-400", icon: "fab fa-microsoft"},
+                    {name: "YAHOO", color: "text-purple-500", icon: "fab fa-yahoo"},
+                    {name: "PROTON", color: "text-purple-400", icon: "fas fa-shield-alt"},
+                    {name: "ICLOUD", color: "text-white", icon: "fab fa-apple"},
+                    {name: "YANDEX", color: "text-red-600", icon: "fab fa-yandex"},
+                    {name: "ZOHO", color: "text-yellow-500", icon: "fas fa-envelope"},
+                    {name: "AOL", color: "text-blue-500", icon: "fas fa-envelope-open"},
+                    {name: "CORPORATE", color: "text-gray-400", icon: "fas fa-building"}
+                ]; 
             }
-            requestAnimationFrame(animateBg);
-        }
-        animateBg();
-
-        // --- INTERFACE LOGIC ---
-
-        function nextSection(id) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
-
-        function selectTarget(type) {
-            currentTarget = type;
-            nextSection('sec-input');
-        }
-
-        function setAttackMode(mode) {
-            attackMode = mode;
-            nextSection('sec-dict');
-        }
-
-        function startTerminal(dictName) {
-            dictionary = dictName;
-            const targetVal = document.getElementById('target-val').value || "UNKNOWN_TARGET";
-            nextSection('sec-terminal');
-            
-            // Setup Stats
-            document.getElementById('stat-target').innerText = `TARGET: ${targetVal} [${currentTarget}]`;
-            
-            // Start Loop
-            running = true;
-            runHackingLoop();
-        }
-
-        // --- HACKING LOOP ENGINE ---
-        function generateFakePass() {
-            // Procedural generation to ensure infinite non-repeating keys visually
-            const p = prefixes[Math.floor(Math.random() * prefixes.length)];
-            const m = mid[Math.floor(Math.random() * mid.length)];
-            const s = suffixes[Math.floor(Math.random() * suffixes.length)];
-            const randNum = Math.floor(Math.random() * 9999);
-            return `${p}${m}${s}${randNum}`; 
-        }
-
-        function runHackingLoop() {
-            if(!running) return;
-
-            const logsDiv = document.getElementById('logs');
-            const speedSpan = document.getElementById('stat-speed');
-            const trySpan = document.getElementById('stat-try');
-
-            // Determine speed based on mode
-            let batchSize = 1;
-            let delay = 30; // ms
-
-            if(attackMode === 'LEVIATHAM_AI') {
-                batchSize = 15; // Super fast
-                delay = 10;
-            } else if (attackMode === 'HIBRIDO') {
-                batchSize = 5;
+            else if(cat === 'wifi') { 
+                catDisplay.innerText = "WIRELESS"; targetLabel.innerText = "SSID / MAC"; 
+                opts = [
+                    {name: "WPA2-PSK", color: "text-green-500", icon: "fas fa-lock"},
+                    {name: "WPA3-ENT", color: "text-yellow-500", icon: "fas fa-shield-alt"},
+                    {name: "WEP", color: "text-red-500", icon: "fas fa-unlock"},
+                    {name: "WPS PIN", color: "text-blue-500", icon: "fas fa-magic"},
+                    {name: "CAPTIVE", color: "text-orange-500", icon: "fas fa-wifi"},
+                    {name: "ENTERPRISE", color: "text-purple-500", icon: "fas fa-building"}
+                ]; 
+            }
+            else if(cat === 'crypto') { 
+                catDisplay.innerText = "ENCRYPTION"; targetLabel.innerText = "HASH"; 
+                opts = [
+                    {name: "MD5", color: "text-gray-500", icon: "fas fa-hashtag"},
+                    {name: "SHA-1", color: "text-blue-300", icon: "fas fa-fingerprint"},
+                    {name: "SHA-256", color: "text-blue-500", icon: "fas fa-shield-alt"},
+                    {name: "BCRYPT", color: "text-purple-400", icon: "fas fa-lock"},
+                    {name: "AES-256", color: "text-green-500", icon: "fas fa-key"},
+                    {name: "RSA", color: "text-yellow-500", icon: "fas fa-file-signature"},
+                    {name: "BTC WALLET", color: "text-orange-500", icon: "fab fa-btc"},
+                    {name: "ETH KEY", color: "text-gray-300", icon: "fab fa-ethereum"},
+                    {name: "ZIP/RAR/7Z", color: "text-red-400", icon: "fas fa-file-archive"},
+                    {name: "PDF", color: "text-red-600", icon: "fas fa-file-pdf"}
+                ]; 
+            }
+            else if(cat === 'social') { 
+                catDisplay.innerText = "SOCIAL"; targetLabel.innerText = "PROFILE ID"; userBox.classList.remove('hidden'); 
+                opts = [
+                    {name: "FACEBOOK", color: "text-blue-600", icon: "fab fa-facebook"},
+                    {name: "INSTAGRAM", color: "text-pink-500", icon: "fab fa-instagram"},
+                    {name: "TWITTER/X", color: "text-white", icon: "fab fa-twitter"},
+                    {name: "TIKTOK", color: "text-cyan-400", icon: "fab fa-tiktok"},
+                    {name: "LINKEDIN", color: "text-blue-700", icon: "fab fa-linkedin"},
+                    {name: "SNAPCHAT", color: "text-yellow-400", icon: "fab fa-snapchat"},
+                    {name: "REDDIT", color: "text-orange-600", icon: "fab fa-reddit"},
+                    {name: "DISCORD", color: "text-indigo-500", icon: "fab fa-discord"},
+                    {name: "TELEGRAM", color: "text-blue-400", icon: "fab fa-telegram"},
+                    {name: "WHATSAPP", color: "text-green-500", icon: "fab fa-whatsapp"}
+                ]; 
+            }
+            else if(cat === 'url') { 
+                catDisplay.innerText = "WEB"; targetLabel.innerText = "URL"; userBox.classList.remove('hidden'); 
+                opts = [{name: "AUTO", color: "text-cyan-400", icon: "fas fa-robot", action: "auto"}, {name: "MANUAL HTML", color: "text-yellow-400", icon: "fas fa-code", action: "manual"}]; 
             }
 
-            // Create batch of attempts
-            let htmlBuffer = "";
-            for(let i=0; i < batchSize; i++) {
-                attemptCount++;
-                const pass = generateFakePass();
-                // Randomly insert system messages
-                if(Math.random() > 0.98) {
-                     htmlBuffer += `<div class="log-entry log-sys">[SYSTEM] Switching proxy chain... node_${Math.floor(Math.random()*100)}</div>`;
+            opts.forEach(o => {
+                const btn = document.createElement('div');
+                btn.className = "btn-option border border-gray-800 hover:border-white";
+                btn.innerHTML = `<span class="${o.color} font-bold"><i class="${o.icon} mr-2"></i> ${o.name}</span>`;
+                btn.onclick = () => {
+                    document.querySelectorAll('#sub-options-container .btn-option').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    state.subOption = o.name;
+                    if(o.action === 'manual') { manualPanel.classList.remove('hidden'); primaryBox.classList.add('hidden'); } else { manualPanel.classList.add('hidden'); primaryBox.classList.remove('hidden'); }
+                };
+                container.appendChild(btn);
+            });
+            document.getElementById('step-1').classList.add('hidden'); document.getElementById('step-2').classList.remove('hidden');
+        }
+
+        function confirmStep2() {
+            let targetVal = "";
+            const userVal = document.getElementById('username-input').value;
+            if (state.subOption === "MANUAL HTML") {
+                if(!document.getElementById('html-input').value) return alert("ERROR: CODIGO FUENTE VACIO");
+                targetVal = "Manual Code Injection";
+            } else {
+                targetVal = document.getElementById('target-input').value;
+                if(!targetVal) return alert("ERROR: OBJETIVO VACIO");
+            }
+            state.username = userVal || "Unknown"; state.target = targetVal;
+            document.getElementById('step-2').classList.add('hidden');
+            
+            if(state.category === 'url' && state.subOption.includes("AUTO")) {
+                document.getElementById('url-scanner').classList.remove('hidden');
+                const scanLogs = document.getElementById('scan-logs');
+                scanLogs.innerHTML = '';
+                const scanSteps = ["> GET /login.php HTTP/1.1", "> Parsing HTML DOM...", "> Found input name='pwd'", "> Found CSRF Token", "> WAF: None Detected", "> Target: Vulnerable"];
+                let i = 0;
+                const interval = setInterval(() => {
+                    if(i < scanSteps.length) { scanLogs.innerHTML += scanSteps[i] + "<br>"; i++; }
+                    else { clearInterval(interval); setTimeout(() => { document.getElementById('url-scanner').classList.add('hidden'); document.getElementById('step-3').classList.remove('hidden'); }, 500); }
+                }, 500);
+
+            } else if(state.category === 'url' && state.subOption === "MANUAL HTML") {
+                const parser = document.getElementById('manual-parser');
+                parser.classList.remove('hidden');
+                const logs = document.getElementById('parser-logs');
+                logs.innerHTML = "";
+                const steps = ["> Reading clipboard buffer...", "> Parsing HTML structure...", "> Extracting form fields...", "> Identifying login endpoint...", "> Injection point located... [OK]"];
+                let i = 0;
+                const interval = setInterval(() => {
+                     if(i < steps.length) { logs.innerHTML += steps[i] + "<br>"; i++; }
+                     else { clearInterval(interval); setTimeout(() => { parser.classList.add('hidden'); document.getElementById('step-3').classList.remove('hidden'); }, 800); }
+                }, 600);
+            } else { 
+                document.getElementById('step-3').classList.remove('hidden'); 
+            }
+        }
+
+        function selectAttack(method) {
+            state.method = method;
+            document.getElementById('step-3').classList.add('hidden');
+            const list = document.getElementById('dictionary-list'); list.innerHTML = '';
+            const pool = [...(dictionaries[state.category] || []), ...dictionaries.universal];
+            pool.forEach(d => {
+                const div = document.createElement('div');
+                div.className = "btn-option flex items-center justify-between";
+                div.innerHTML = `<div class="flex items-center"><i class="${d.icon} text-green-600 mr-3 text-lg"></i><div><div class="text-sm font-bold text-gray-300">${d.name}</div><div class="text-[9px] text-gray-500 font-mono">~${d.count.toLocaleString()}</div></div></div><div class="text-xs text-gray-400 font-mono border border-gray-700 px-1 bg-black">${d.size}</div>`;
+                div.onclick = () => startAttack(d.name, d.count);
+                list.appendChild(div);
+            });
+            document.getElementById('step-4').classList.remove('hidden');
+        }
+
+        function startAttack(dictName, totalCount) {
+            state.dictionary = dictName;
+            state.totalLines = totalCount;
+            document.getElementById('step-4').classList.add('hidden');
+            document.getElementById('step-5').classList.remove('hidden');
+            
+            const elTarget = document.getElementById('term-target');
+            const elDict = document.getElementById('term-dict');
+            const elMethod = document.getElementById('term-method');
+            if(elTarget) elTarget.innerText = state.target;
+            if(elDict) elDict.innerText = state.dictionary;
+            if(elMethod) elMethod.innerText = state.method;
+
+            const term = document.getElementById('terminal');
+            term.innerHTML = ''; 
+            
+            // PROMPT REAL KALI
+            const bootLogs = [
+                `<span class="t-prompt">root@leviathan:~#</span> ./bruteforce -t "${state.target}" -d "${state.dictionary}"`,
+                `<span class="t-time">[${new Date().toLocaleTimeString()}]</span> <span class="t-green">[*]</span> Initializing leviatham framework v15.2...`,
+                `<span class="t-time">[${new Date().toLocaleTimeString()}]</span> <span class="t-blue">[*]</span> Loading dictionary: ${dictName} (${totalCount} lines)... Done.`,
+                `<span class="t-time">[${new Date().toLocaleTimeString()}]</span> <span class="t-user">[*]</span> Target User: ${state.username}`,
+                `<span class="t-time">[${new Date().toLocaleTimeString()}]</span> <span class="t-blue">[*]</span> Engine: ${state.method}`,
+                `<span class="t-time">[${new Date().toLocaleTimeString()}]</span> <span class="t-green">[+]</span> 256 worker threads spawned.`,
+                `<span class="t-time">[${new Date().toLocaleTimeString()}]</span> <span class="t-red">[*]</span> STARTING ATTACK SEQUENCE...`
+            ];
+
+            let i = 0;
+            const bootInterval = setInterval(() => {
+                if(i < bootLogs.length) {
+                    term.innerHTML += `<div class="log-line font-mono text-xs">${bootLogs[i]}</div>`;
+                    i++;
                 } else {
-                     htmlBuffer += `<div class="log-entry"><span class="log-fail">[FAILED]</span> Testing: ${pass}</div>`;
+                    clearInterval(bootInterval);
+                    state.isRunning = true;
+                    loopAttack();
                 }
-            }
-
-            logsDiv.innerHTML += htmlBuffer;
-
-            // Keep DOM light: remove old nodes if too many
-            while(logsDiv.childNodes.length > 30) {
-                logsDiv.removeChild(logsDiv.firstChild);
-            }
-
-            // Update stats
-            trySpan.innerText = `ATTEMPTS: ${new Intl.NumberFormat().format(attemptCount)}`;
-            const kps = Math.floor((Math.random() * 500) + (batchSize * 100));
-            speedSpan.innerText = `SPEED: ${kps} k/s`;
-
-            // Auto Scroll logic
-            // (Flex-end handles most, but this ensures lock)
-            // logsDiv.scrollTop = logsDiv.scrollHeight; 
-
-            setTimeout(runHackingLoop, delay);
+            }, 400);
         }
 
+        function loopAttack() {
+            if(!state.isRunning) return;
+            const term = document.getElementById('terminal');
+            const counter = document.getElementById('attempt-counter');
+            const progressBar = document.getElementById('progress-bar');
+            
+            const now = new Date().toLocaleTimeString();
+            const pass = passwordDB[Math.floor(Math.random() * passwordDB.length)] + Math.floor(Math.random()*9999);
+            
+            const div = document.createElement('div');
+            div.className = "log-line";
+            // LOG con flex-wrap y tamaño ajustado
+            div.innerHTML = `<span class="t-time">[${now}]</span> <span class="t-pass" style="word-break:break-all;">${pass}</span> <span class="t-err">>> Login incorrecto</span> <span class="t-dict">[${state.dictionary}]</span> <span class="t-user">User:${state.username}</span> <span class="t-denied">[DENIED]</span>`;
+            
+            term.appendChild(div);
+            term.scrollTop = term.scrollHeight;
+            if(term.childElementCount > 100) term.removeChild(term.firstChild);
+
+            state.count++;
+            counter.innerText = `${state.count.toLocaleString()} / ${state.totalLines.toLocaleString()}`;
+            
+            const percent = Math.min((state.count / state.totalLines) * 5000, 100);
+            progressBar.style.width = percent + "%";
+
+            // Cursor Parpadeante en el último elemento
+            const allLogs = term.getElementsByClassName('log-line');
+            if(allLogs.length > 0) {
+               const oldCursor = term.querySelector('.cursor-blink');
+               if(oldCursor) oldCursor.remove();
+               allLogs[allLogs.length-1].innerHTML += `<span class="cursor-blink"></span>`;
+            }
+
+            const speed = Math.floor(Math.random() * 50) + 20; 
+            setTimeout(loopAttack, speed);
+        }
+
+        function abortAttack() {
+            state.isRunning = false;
+            const btn = document.getElementById('abort-btn');
+            if(btn) { btn.disabled = true; btn.classList.add('opacity-50'); }
+            
+            const term = document.getElementById('terminal');
+            const exitLogs = [
+                `<br><span class="t-user">^C</span>`,
+                `<span class="t-time">[${new Date().toLocaleTimeString()}]</span> <span class="t-err">[!]</span> Received SIGINT (KeyboardInterrupt)`,
+                `<span class="t-time">[${new Date().toLocaleTimeString()}]</span> <span class="t-blue">[*]</span> Stopping thread pool (256/256 active)...`,
+                `<span class="t-time">[${new Date().toLocaleTimeString()}]</span> <span class="t-green">[+]</span> Threads terminated successfully.`,
+                `<span class="t-time">[${new Date().toLocaleTimeString()}]</span> <span class="t-dim">[*]</span> Flushing RAM buffers... OK`,
+                `<span class="t-time">[${new Date().toLocaleTimeString()}]</span> <span class="t-dim">[*]</span> Unmounting virtual file system... OK`,
+                `<span class="t-time">[${new Date().toLocaleTimeString()}]</span> <span class="t-err">[!]</span> SYSTEM HALTED. Logging out root...`
+            ];
+            
+            let i = 0;
+            const exitInterval = setInterval(() => {
+                if(i < exitLogs.length) {
+                    const line = document.createElement('div');
+                    line.className = "log-line font-mono text-xs";
+                    line.innerHTML = exitLogs[i];
+                    term.appendChild(line);
+                    term.scrollTop = term.scrollHeight;
+                    i++;
+                } else {
+                    clearInterval(exitInterval);
+                    setTimeout(() => { window.location.reload(); }, 1500);
+                }
+            }, 200);
+        }
+
+        (function() {
+            const canvas = document.getElementById('neural-canvas');
+            const ctx = canvas.getContext('2d');
+            let w, h, particles = [];
+            function initCanvas() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; particles = []; for(let i=0; i<60; i++) { particles.push({x: Math.random()*w, y: Math.random()*h, vx: (Math.random()-0.5)*0.5, vy: (Math.random()-0.5)*0.5}); } }
+            function animateCanvas() { ctx.clearRect(0,0,w,h); ctx.fillStyle = '#00ff00'; ctx.strokeStyle = 'rgba(0, 255, 0, 0.15)'; particles.forEach((p, i) => { p.x += p.vx; p.y += p.vy; if(p.x<0 || p.x>w) p.vx*=-1; if(p.y<0 || p.y>h) p.vy*=-1; ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI*2); ctx.fill(); for(let j=i+1; j<particles.length; j++) { const p2 = particles[j]; if(Math.hypot(p.x-p2.x, p.y-p2.y) < 100) { ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke(); } } }); requestAnimationFrame(animateCanvas); }
+            window.addEventListener('resize', initCanvas); initCanvas(); animateCanvas();
+        })();
     </script>
 </body>
 </html>
